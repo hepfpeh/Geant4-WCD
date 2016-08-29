@@ -1,12 +1,12 @@
 Tst README
 
-Héctor Pérez (hector@ecfm.usac.edu.gt
+Héctor Pérez (hector@ecfm.usac.edu.gt)
 Laboratorio de instrumentación
 Instituto de investigación
 Escuela de ciencias Físicas y Matemáticas
 USAC
 
-Este código en Geant4 (10.01) es la primera prueba de la simulación del tanque WCD (Hunapu) de prueba de la colaboración LAGO por parte la la USAC. Se basa principalmente en los ejemplos B1, OpticalNovice y LXe.
+Este código en Geant4 (10.01) tiene como propósito poner a prueba aspectos fundamentales, como procesos físicos requerios, definición de superficies sensibles, captura de eventos y despliege de resultados de la simulación del tanque WCD (Hunapu) de prueba de la colaboración LAGO por parte la la USAC. Se basa principalmente en los ejemplos B1, OpticalNovice y LXe.
 
 Esta simulación contiene
 
