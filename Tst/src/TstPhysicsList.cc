@@ -27,7 +27,7 @@
 
 TstPhysicsList::TstPhysicsList()
  : G4VUserPhysicsList(),
-   fVerboseLebel(1), fMaxNumPhotonStep(20)
+   fVerboseLebel(0), fMaxNumPhotonStep(20)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

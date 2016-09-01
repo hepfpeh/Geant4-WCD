@@ -6,7 +6,7 @@
 
 
 class G4LogicalVolume;
-class G4VPhysicalVolume;
+//class G4VPhysicalVolume;
 
 class TstDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -17,6 +17,7 @@ public:
 
   // virtual method from G4VUserDetectorConstruction.
   virtual G4VPhysicalVolume* Construct();
+  virtual void ConstructSDandField();
 
   // Data members
 
@@ -37,6 +38,10 @@ public:
 
   // Metal Sphere
   G4int MetalSphere_outerRadius;
+
+  // Logical Volume
+
+  G4LogicalVolume* logic_MetalSphere;
 
 };
 #endif

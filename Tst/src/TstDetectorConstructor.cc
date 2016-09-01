@@ -1,4 +1,5 @@
 #include "TstDetectorConstruction.hh"
+#include "TstSensitiveDetector.hh"
 
 #include "G4RunManager.hh"
 #include "G4Material.hh"
@@ -15,6 +16,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4VSensitiveDetector.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -39,6 +41,10 @@ TstDetectorConstruction::TstDetectorConstruction()
 
 	  // Metal Sphere
 	  MetalSphere_outerRadius		= 19.5*cm;
+
+	  // Logical Volume
+
+	  logic_MetalSphere = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -267,7 +273,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
   G4Orb* solid_MetalSphere =
 		  new G4Orb( "MetalSphere_solid", MetalSphere_outerRadius );
 
-  G4LogicalVolume* logic_MetalSphere =
+  logic_MetalSphere =
 		  new G4LogicalVolume( 	solid_MetalSphere,
 				  	  	  	  	aluminium,
 								"MetalSphere_logic");
@@ -327,7 +333,6 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
       //**Create logical skin surfaces
         new G4LogicalSkinSurface("photocath_surf",logic_MetalSphere,photocath_opsurf);
 
-
   //
   //always return the physical World
   //
@@ -335,3 +340,15 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void TstDetectorConstruction::ConstructSDandField() {
+
+  if (!logic_MetalSphere) return;
+
+  // PMT SD
+
+  TstSensitiveDetector* TstSD = new TstSensitiveDetector("/Tst/TstSD");
+
+  SetSensitiveDetector(logic_MetalSphere, TstSD);
+
+}
