@@ -25,7 +25,7 @@ TstSteppingAction::~TstSteppingAction()
 void TstSteppingAction::UserSteppingAction(const G4Step* theStep)
 {
 
-	G4Track* theTrack = theStep->GetTrack();
+/*	G4Track* theTrack = theStep->GetTrack();
 
 	G4StepPoint* thePrePoint = theStep->GetPreStepPoint();
 	G4VPhysicalVolume* thePrePV = thePrePoint->GetPhysicalVolume();
@@ -64,24 +64,13 @@ void TstSteppingAction::UserSteppingAction(const G4Step* theStep)
 	    //Otherwise the boundary status may not be valid
 	    //Prior to Geant4.6.0-p1 this would not have been enough to check
 	    if(thePostPoint->GetStepStatus()==fGeomBoundary){
-/*	      if(fExpectedNextStatus==StepTooSmall){
-	        if(boundaryStatus!=StepTooSmall){
-	          G4ExceptionDescription ed;
-	          ed << "LXeSteppingAction::UserSteppingAction(): "
-	                << "No reallocation step after reflection!"
-	                << G4endl;
-	          G4Exception("LXeSteppingAction::UserSteppingAction()", "LXeExpl01",
-	          FatalException,ed,
-	          "Something is wrong with the surface normal or geometry");
-	        }
-	      }
-*/
 	      if(boundaryStatus == Detection )
 	      {
 	    	G4cout << "-o|o- Detection form TstSteppingAction::UserSteppingAction -o|o-" << G4endl ;
 	      }
 	    }
 	}
+*/
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

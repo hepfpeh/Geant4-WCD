@@ -5,7 +5,6 @@
 #include "globals.hh"
 
 class G4Run;
-class G4LogicalVolume;
 
 /// Run action class
 ///

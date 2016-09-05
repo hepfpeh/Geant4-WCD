@@ -3,7 +3,7 @@
 
 #include "G4DataVector.hh"
 #include "G4VSensitiveDetector.hh"
-//#include "LXePMTHit.hh"
+#include "TstHit.hh"
 
 #include <vector>
 
@@ -26,9 +26,9 @@ class TstSensitiveDetector : public G4VSensitiveDetector
     void DrawAll();
     void PrintAll();
 
-//  private:
+  private:
 
-//    LXePMTHitsCollection* fPMTHitCollection;
+    TstHit* TstSDHits;
 
 };
 
