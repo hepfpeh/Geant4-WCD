@@ -1,0 +1,6 @@
+El codigo base para trabajar al simulacion es OpNovice que se encuentra en la carpeta de
+ejemplos extendidos de Geant4. 
+El programa simula un tanque de Cherenkov, con material reflejante TYVEK. El 
+tanque posee forma cilindrica al igual que la superficie del Tyvek y el volumen que contiene al agua.
+
+En el fondo del tanque, se encuentra el fototubo que es construido con una semiesfera y el fotocatodo construido de forma laminar (cubo con grosor muy pequeno).
