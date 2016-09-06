@@ -1,0 +1,17 @@
+En esta carpeta inicialmente comienzo realizando la simulación sobre el ejemplo OPNovice.
+De este ejemplo tomé principalmente los contenidos de PhysicsList, DetectorConstruction,
+Physics List (removí todo lo que no era Cherenkov), Primary Generator Action. La geome-
+tría es de un cilindro de Tyvek sumergido en otro cilindro más grande de agua.
+
+Luego de OpNovice, tomé LXe como ejemplo para los contenidos relacionados con la construc-
+ción del PMT. Del ejemplo 'radioprotection' tomé contenido para archivos de sensitive detector.
+
+Aquí colocaré algunos comandos para fácil acceso :3
+
+Para iniciar el ambiente en el build
+source /home/daniel/Documents/geant4.10.2-install/bin/geant4.sh
+
+Para crear en el build
+cmake DGeant4_DIR=/home/daniel/Documents/geant4.10.2-install/share/Geant4-10.2.1 /home/daniel/.ssh/LAGO-UVG/Geant4/opEjemplo/OpNovice
+
+para cambiar nombres de archivos: find /home/daniel/.ssh/LAGO-UVG/Geant4/KinichAhau/KinichAhau/ -name \*.cc -exec sed -i "s/OpNovice/KinichAhau/g" {} \;
