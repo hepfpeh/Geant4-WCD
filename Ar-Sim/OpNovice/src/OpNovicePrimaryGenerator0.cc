@@ -23,47 +23,66 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file eventgenerator/particleGun/src/PrimaryGeneratorAction0.cc
+/// \brief Implementation of the PrimaryGeneratorAction0 class
 //
 //
+// $Id: PrimaryGeneratorAction0.cc 83872 2014-09-20 22:23:50Z maire $
+// 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef OpNovicePrimaryGeneratorAction_h
-#define OpNovicePrimaryGeneratorAction_h 1
+#include "OpNovicePrimaryGenerator0.hh"
+#include "OpNovicePrimaryGeneratorAction.hh"
 
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "globals.hh"
-
-class OpNovicePrimaryGenerator0;
-class G4ParticleGun;
-class G4Event;
-class OpNovicePrimaryGeneratorMessenger;
+#include "G4Event.hh"
+#include "G4ParticleGun.hh"
+#include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class OpNovicePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+OpNovicePrimaryGenerator0::OpNovicePrimaryGenerator0(G4ParticleGun* gun)
+: fParticleGun(gun)
 {
-  public:
-    OpNovicePrimaryGeneratorAction();
-    virtual ~OpNovicePrimaryGeneratorAction();
-
-  public:
-    virtual void GeneratePrimaries(G4Event*);
-
-    void SetOptPhotonPolar();
-    void SetOptPhotonPolar(G4double);
-    void SelectAction(G4int i) { fSelectedAction = i; };    
-    G4int GetSelectedAction()  { return fSelectedAction; };
-
-    OpNovicePrimaryGenerator0*  GetAction0() { return fAction0; };
-
-  private:
-    G4ParticleGun* fParticleGun;
-    OpNovicePrimaryGenerator0* fAction0;
-    G4int                    fSelectedAction;
-    OpNovicePrimaryGeneratorMessenger* fGunMessenger;
-};
+  //solid angle
+  //
+  G4double alphaMin =  0*deg;      //alpha in [0,pi]
+  G4double alphaMax = 60*deg;
+  fCosAlphaMin = std::cos(alphaMin);
+  fCosAlphaMax = std::cos(alphaMax);
+  
+  fPsiMin = 0*deg;       //psi in [0, 2*pi]
+  fPsiMax = 360*deg;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif /*OpNovicePrimaryGeneratorAction_h*/
+OpNovicePrimaryGenerator0::~OpNovicePrimaryGenerator0()
+{ }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void OpNovicePrimaryGenerator0::GeneratePrimaries(G4Event* anEvent)
+{  
+  //vertex position fixed
+  //
+  G4double x0 = 0*mm, y0 = 0*mm, z0 = -555*mm;
+  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+
+  //direction uniform in solid angle
+  //
+  G4double cosAlpha = fCosAlphaMin-G4UniformRand()*(fCosAlphaMin-fCosAlphaMax);
+  G4double sinAlpha = std::sqrt(1. - cosAlpha*cosAlpha);
+  G4double psi = fPsiMin + G4UniformRand()*(fPsiMax - fPsiMin);
+
+  G4double ux = sinAlpha*std::cos(psi),
+           uy = sinAlpha*std::sin(psi),
+           uz = cosAlpha;
+
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(ux,uy,uz));
+  
+  fParticleGun->GeneratePrimaryVertex(anEvent);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
