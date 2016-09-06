@@ -1,6 +1,6 @@
 /vis/open OGL 600x600-0+0
 /vis/viewer/set/autoRefresh false
-/vis/verbose errors
+/vis/verbose 0 # errors
 /vis/drawVolume
 
 /vis/viewer/set/style wireframe

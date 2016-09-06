@@ -17,7 +17,7 @@ Esta simulación contiene
 -- Una hoja de Tyvek en el centro del cubo
 -- Una esfera de aluminio fotosensible.
 -- Se especifican las superficies y las propiedades de estas
-Esta geometría es de prueba y con coincide en absoluto con el detector real.
+Esta geometría es de prueba y no coincide en absoluto con el detector real.
 
 - PhysicsList que incluye la emisión de fotones Cherenkov
 
@@ -25,6 +25,6 @@ Esta geometría es de prueba y con coincide en absoluto con el detector real.
 
 - Inicialización (G4Gun) del evento primario que es un fotón optico (opticalphoton) de 3 eV que se lanza hacia la hoja de Tyvek.
 
-Al momento se detectan los fotones que llegan a la esfera dentro del BoundaryProcess respectivo.
+- Se detectan los fotones que llegan a la esfera dentro del BoundaryProcess respectivo.
 
-Aun falta que se capture la dectección en la frontera y se procese la información.
+- Ya se cuentan los fotones que llegan a la superficie sensible.

@@ -1,0 +1,9 @@
+/control/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/process/setVerbose 0
+/process/em/verbose 0
+
+/gun/particle mu-
+/gun/energy 100 MeV
+/run/beamOn 100

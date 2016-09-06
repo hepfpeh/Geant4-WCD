@@ -80,9 +80,11 @@ void TstPhysicsList::ConstructDecay()
   // Add Decay Process
   G4Decay* theDecayProcess = new G4Decay();
   theParticleIterator->reset();
+  theDecayProcess->SetVerboseLevel(fVerboseLebel);
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
+    pmanager->SetVerboseLevel(fVerboseLebel);
     if (theDecayProcess->IsApplicable(*particle)) {
       pmanager ->AddProcess(theDecayProcess);
       // set ordering for PostStepDoIt and AtRestDoIt
@@ -195,11 +197,12 @@ void TstPhysicsList::ConstructOp()
       pmanager->SetProcessOrdering(cerenkovProcess,idxPostStep);
     }
     if (particleName == "opticalphoton") {
-      G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
+      //G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
       pmanager->AddDiscreteProcess(absorptionProcess);
       pmanager->AddDiscreteProcess(rayleighScatteringProcess);
       pmanager->AddDiscreteProcess(mieHGScatteringProcess);
       pmanager->AddDiscreteProcess(boundaryProcess);
+
     }
   }
 }
@@ -214,7 +217,7 @@ void TstPhysicsList::SetCuts()
   //
   SetCutsWithDefault();
 
-  if (verboseLevel>0) DumpCutValuesTable();
+  //if (verboseLevel>0) DumpCutValuesTable();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

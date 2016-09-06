@@ -36,8 +36,7 @@ G4bool TstSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
 		TstSDHits = new TstHit;
 	}
 	TstSDHits->IncPhotonCount();
-	G4cout << "-o|o- Detection from TstSensitiveDetector::ProcessHits -o|o-" << G4endl;
-  return false;
+  return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
