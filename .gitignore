@@ -1,3 +1,7 @@
 # Excluir los directorios que finalizan con -build
 /*-build
 /*-Build
+
+# Excluir los archivos que inicien o finalicen con ~ 
+~*
+*~
