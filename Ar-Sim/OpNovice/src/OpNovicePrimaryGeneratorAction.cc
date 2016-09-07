@@ -30,6 +30,8 @@
 
 #include "OpNovicePrimaryGeneratorAction.hh"
 #include "OpNovicePrimaryGeneratorMessenger.hh"
+//se agrega esta libreria para lo del angulo solido
+#include "OpNovicePrimaryGenerator0.hh"
 
 #include "Randomize.hh"
 
@@ -43,24 +45,32 @@
 
 OpNovicePrimaryGeneratorAction::OpNovicePrimaryGeneratorAction()
  : G4VUserPrimaryGeneratorAction(), 
-   fParticleGun(0)
+   fParticleGun(0),
+   fAction0(0),
+   fSelectedAction(0),
+   fGunMessenger(0)
 {
   G4int n_particle = 1;
   fParticleGun = new G4ParticleGun(n_particle);
 
   //create a messenger for this class
-  fGunMessenger = new OpNovicePrimaryGeneratorMessenger(this);
+ // fGunMessenger = new OpNovicePrimaryGeneratorMessenger(this);
 
   //default kinematic
   //
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4ParticleDefinition* particle = particleTable->FindParticle("e+");
+  G4ParticleDefinition* particle = particleTable->FindParticle("mu-");
 
   fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleTime(0.0*ns);
+  //fParticleGun->SetParticleTime(0.0*ns);
   fParticleGun->SetParticlePosition(G4ThreeVector(0.0*cm,0.0*cm,0.0*cm));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
-  fParticleGun->SetParticleEnergy(500.0*keV);
+  //fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
+  fParticleGun->SetParticleEnergy(5*GeV);
+
+  fAction0 = new OpNovicePrimaryGenerator0(fParticleGun);
+
+  //create a messenger for this class
+  fGunMessenger = new OpNovicePrimaryGeneratorMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -69,13 +79,23 @@ OpNovicePrimaryGeneratorAction::~OpNovicePrimaryGeneratorAction()
 {
   delete fParticleGun;
   delete fGunMessenger;
-}
+  delete fAction0; 
+//create a messenger for this class
+  fGunMessenger = new OpNovicePrimaryGeneratorMessenger(this);}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void OpNovicePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  fParticleGun->GeneratePrimaryVertex(anEvent);
+  //fParticleGun->GeneratePrimaryVertex(anEvent);
+   switch(fSelectedAction)
+   {
+    case 0:
+     fAction0->GeneratePrimaries(anEvent);
+     break;
+    default:
+      G4cerr << "Invalid generator fAction" << G4endl;
+   } 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

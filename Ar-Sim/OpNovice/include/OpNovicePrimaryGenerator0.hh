@@ -23,47 +23,43 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file eventgenerator/particleGun/include/PrimaryGeneratorAction0.hh
+/// \brief Definition of the PrimaryGeneratorAction0 class
 //
 //
+// $Id: PrimaryGeneratorAction0.hh 67332 2013-02-14 17:12:13Z ihrivnac $
+// 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef OpNovicePrimaryGeneratorAction_h
-#define OpNovicePrimaryGeneratorAction_h 1
+#ifndef OpNovicePrimaryGenerator0_h
+#define OpNovicePrimaryGenerator0_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
 
-class OpNovicePrimaryGenerator0;
 class G4ParticleGun;
 class G4Event;
-class OpNovicePrimaryGeneratorMessenger;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class OpNovicePrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class OpNovicePrimaryGenerator0
 {
   public:
-    OpNovicePrimaryGeneratorAction();
-    virtual ~OpNovicePrimaryGeneratorAction();
+   OpNovicePrimaryGenerator0(G4ParticleGun*);    
+   ~OpNovicePrimaryGenerator0();
 
   public:
-    virtual void GeneratePrimaries(G4Event*);
-
-    void SetOptPhotonPolar();
-    void SetOptPhotonPolar(G4double);
-    void SelectAction(G4int i) { fSelectedAction = i; };    
-    G4int GetSelectedAction()  { return fSelectedAction; };
-
-    OpNovicePrimaryGenerator0*  GetAction0() { return fAction0; };
+    void GeneratePrimaries(G4Event*);
 
   private:
-    G4ParticleGun* fParticleGun;
-    OpNovicePrimaryGenerator0* fAction0;
-    G4int                    fSelectedAction;
-    OpNovicePrimaryGeneratorMessenger* fGunMessenger;
+   G4double fCosAlphaMin, fCosAlphaMax;      //solid angle
+   G4double fPsiMin, fPsiMax;
+   
+
+    G4ParticleGun*  fParticleGun;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif /*OpNovicePrimaryGeneratorAction_h*/
+#endif
