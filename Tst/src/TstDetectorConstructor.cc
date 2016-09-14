@@ -31,9 +31,13 @@ TstDetectorConstruction::TstDetectorConstruction()
 
 	  // Tyvek foil
 	  TyvekFoil_xSizeHalf	= 0.10*cm;
-	  TyvekFoil_ySizeHalf	= 20.0*cm;
-	  TyvekFoil_zSizeHalf	= 20.0*cm;
+	  TyvekFoil_ySizeHalf	= 40.0*cm;
+	  TyvekFoil_zSizeHalf	= 40.0*cm;
 
+	  // GlassSlabe
+	  GlassSlab_xSizeHalf	= 25.00*cm;
+	  GlassSlab_ySizeHalf	= 10.00*cm;
+	  GlassSlab_zSizeHalf	= 25.00*cm;
 	  // PMT
 
 	  // Glass sphere
@@ -86,7 +90,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
   //
   // ------------ Generate & Add Material Properties Table ------------
   //
-    G4double photonEnergy[] =
+    G4double WaterPhotonEnergy[] =
               { 2.034*eV, 2.068*eV, 2.103*eV, 2.139*eV,
                 2.177*eV, 2.216*eV, 2.256*eV, 2.298*eV,
                 2.341*eV, 2.386*eV, 2.433*eV, 2.481*eV,
@@ -96,12 +100,12 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
                 3.353*eV, 3.446*eV, 3.545*eV, 3.649*eV,
                 3.760*eV, 3.877*eV, 4.002*eV, 4.136*eV };
 
-    const G4int nEntries = sizeof(photonEnergy)/sizeof(G4double);
+    const G4int nEntries = sizeof(WaterPhotonEnergy)/sizeof(G4double);
 
   //
   // Water
   //
-    G4double refractiveIndex1[] =
+    G4double WaterRefractiveIndex1[] =
               { 1.3435, 1.344,  1.3445, 1.345,  1.3455,
                 1.346,  1.3465, 1.347,  1.3475, 1.348,
                 1.3485, 1.3492, 1.35,   1.3505, 1.351,
@@ -110,9 +114,9 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
                 1.3572, 1.358,  1.3585, 1.359,  1.3595,
                 1.36,   1.3608};
 
-    assert(sizeof(refractiveIndex1) == sizeof(photonEnergy));
+    assert(sizeof(WaterRefractiveIndex1) == sizeof(WaterPhotonEnergy));
 
-    G4double absorption[] =
+    G4double WaterAbsorption[] =
              {3.448*m,  4.082*m,  6.329*m,  9.174*m, 12.346*m, 13.889*m,
              15.152*m, 17.241*m, 18.868*m, 20.000*m, 26.316*m, 35.714*m,
              45.455*m, 47.619*m, 52.632*m, 52.632*m, 55.556*m, 52.632*m,
@@ -120,14 +124,15 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
              30.000*m, 28.500*m, 27.000*m, 24.500*m, 22.000*m, 19.500*m,
              17.500*m, 14.500*m };
 
-    assert(sizeof(absorption) == sizeof(photonEnergy));
+    assert(sizeof(WaterAbsorption) == sizeof(WaterPhotonEnergy));
 
     G4MaterialPropertiesTable* WaterPropertiesTable = new G4MaterialPropertiesTable();
 
-    WaterPropertiesTable->AddProperty("RINDEX",       photonEnergy, refractiveIndex1,nEntries)
+    WaterPropertiesTable->AddProperty("RINDEX",       WaterPhotonEnergy, WaterRefractiveIndex1,nEntries)
           ->SetSpline(true);
-    WaterPropertiesTable->AddProperty("ABSLENGTH",    photonEnergy, absorption,     nEntries)
+    WaterPropertiesTable->AddProperty("ABSLENGTH",    WaterPhotonEnergy, WaterAbsorption,     nEntries)
           ->SetSpline(true);
+
 
     G4double energy_water[] = {
        1.56962*eV, 1.58974*eV, 1.61039*eV, 1.63157*eV,
@@ -188,6 +193,42 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
     //WaterPropertiesTable->DumpTable();
 
     water->SetMaterialPropertiesTable(WaterPropertiesTable);
+ //=====================================
+
+	//
+	// Glass
+	//
+
+    G4double GlassPhotonEnergy[] =
+              { 1.890*eV, 2.105*eV, 2.551*eV, 2.952*eV,
+                4.136*eV };
+
+    const G4int nGlassEntries = sizeof(GlassPhotonEnergy)/sizeof(G4double);
+
+	  G4double GlassRefractiveIndex[] =
+				{ 1.4705, 1.4727, 1.4776, 1.4800, 1.500};
+
+	  assert(sizeof(GlassRefractiveIndex) == sizeof(GlassPhotonEnergy));
+
+	  G4double GlassAbsorption[] =
+			   {3.448*m,  4.082*m,  6.329*m,  9.174*m, 12.346*m };
+
+	  assert(sizeof(GlassAbsorption) == sizeof(GlassPhotonEnergy));
+
+	  G4MaterialPropertiesTable* GlassPropertiesTable = new G4MaterialPropertiesTable();
+
+	  GlassPropertiesTable->AddProperty("RINDEX",       GlassPhotonEnergy, GlassRefractiveIndex,nGlassEntries)
+			->SetSpline(true);
+	  GlassPropertiesTable->AddProperty("ABSLENGTH",    GlassPhotonEnergy, GlassAbsorption,     nGlassEntries)
+			->SetSpline(true);
+
+
+	  glass->SetMaterialPropertiesTable(GlassPropertiesTable);
+
+
+
+//=====================================
+
 
 
    //
@@ -223,6 +264,31 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
                       0,                     								//copy number
                       checkOverlaps);        								//overlaps checking
 
+
+  // GlassSlab
+
+  G4Box* solid_GlassSlab =
+    new G4Box("GlassSlab_solid",                       						//its name
+    		GlassSlab_xSizeHalf, GlassSlab_ySizeHalf, GlassSlab_zSizeHalf); //its size
+
+  G4LogicalVolume* logic_GlassSlab =
+    new G4LogicalVolume(solid_GlassSlab,          							//its solid
+                        glass,           									//its material
+                        "GlassSlab_logic");    								//its name
+
+//  G4VPhysicalVolume* physical_GlassSlab =
+    new G4PVPlacement(0,                 								    //no rotation
+                      G4ThreeVector(-25.0*cm,-75.0*cm, 00.0*cm),
+                      logic_GlassSlab,			          					//its logical volume
+                      "GlassSlab_physical",               					//its name
+					  logic_WaterCube,                     					//its mother  volume
+                      false,                 								//no boolean operation
+                      0,                     								//copy number
+                      checkOverlaps);        								//overlaps checking
+
+
+
+
   //
   // Tyvek Foil
   //
@@ -237,7 +303,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
 
   G4VPhysicalVolume* physical_TyvekFoil =
 	new G4PVPlacement(0,                       								//no rotation
-                    G4ThreeVector(),         								//at (0,0,0)
+                    G4ThreeVector(-75.0*cm, 0, 0),
                     logic_TyvekFoil,                						//its logical volume
                     "TyvekFoil_physical",              						//its name
                     logic_WaterCube,              							//its mother  volume
@@ -250,7 +316,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
   // PMT
   //
   // Glass sphere
-/*  G4Orb* solid_GlassSphere =
+  G4Orb* solid_GlassSphere =
 		  new G4Orb( "GlassSphere_solid", GlassSphere_outerRadius );
 
   G4LogicalVolume* logic_GlassSphere =
@@ -258,7 +324,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
 				  	  	  	  	glass,
 								"GlassSphere_logic");
 
-  G4VPhysicalVolume* physical_GlassSphere =
+//  G4VPhysicalVolume* physical_GlassSphere =
 		  new G4PVPlacement(	0,
 				  	  	  	G4ThreeVector(50.0*cm,50.0*cm,50.0*cm),
 							logic_GlassSphere,
@@ -267,7 +333,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
 							false,
 							0,
 							checkOverlaps);
-*/
+
 
   // Metal sphere
   G4Orb* solid_MetalSphere =
@@ -278,12 +344,14 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
 				  	  	  	  	aluminium,
 								"MetalSphere_logic");
 
-  G4VPhysicalVolume* physical_MetalSphere =
+//  G4VPhysicalVolume* physical_MetalSphere =
 		  new G4PVPlacement(	0,
-				  	  	  		G4ThreeVector(50.0*cm,50.0*cm,50.0*cm),
+//				  	  	  		G4ThreeVector(50.0*cm,50.0*cm,50.0*cm),
+				  	  	  		G4ThreeVector( 0, 0, 0),
 								logic_MetalSphere,
 								"MetalSphere_physical",
-								logic_WaterCube,
+//								logic_WaterCube,
+								logic_GlassSphere,
 								false,
 								0,
 								checkOverlaps);
@@ -314,6 +382,34 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
     TyvekSurfaceProperty->AddProperty("EFFICIENCY",pp,efficiency,num_0);
     TyvekSurface->SetMaterialPropertiesTable(TyvekSurfaceProperty);
 
+    // Glass
+
+/*    G4OpticalSurface* GlassSurface = new G4OpticalSurface("GlassSurface");
+    GlassSurface->SetType(dielectric_dielectric);
+    GlassSurface->SetFinish(polished);
+    GlassSurface->SetModel(unified);
+
+    new G4LogicalBorderSurface("GlassSurface1", physical_WaterCube, physical_GlassSphere, GlassSurface);
+
+    new G4LogicalBorderSurface("GlassSurface2", physical_WaterCube, physical_GlassSlab, GlassSurface);
+
+    G4double GlassReflectivity[] = {0.5, 0.5, 0.5, 0.5, 0.5};
+	G4double GlassEfficiency[]   = {0, 0, 0, 0, 0};
+	G4double GlassSpecularLobe[]    = {0.3, 0.3, 0.3, 0.3, 0.3};
+	G4double GlassSpecularSpike[]   = {0.2, 0.2, 0.2, 0.2, 0.2};
+	G4double GlassBackScatter[]     = {0.2, 0.2, 0.2, 0.2, 0.2};
+
+	G4MaterialPropertiesTable *GlassSurfacePropertiesTable = new G4MaterialPropertiesTable();
+
+	GlassSurfacePropertiesTable->AddProperty("REFLECTIVITY", GlassPhotonEnergy, GlassReflectivity, nGlassEntries);
+	GlassSurfacePropertiesTable->AddProperty("EFFICIENCY",   GlassPhotonEnergy, GlassEfficiency,   nGlassEntries);
+	GlassSurfacePropertiesTable->AddProperty("SPECULARLOBECONSTANT",  GlassPhotonEnergy, GlassSpecularLobe,    nGlassEntries);
+	GlassSurfacePropertiesTable->AddProperty("SPECULARSPIKECONSTANT", GlassPhotonEnergy, GlassSpecularSpike,   nGlassEntries);
+	GlassSurfacePropertiesTable->AddProperty("BACKSCATTERCONSTANT",   GlassPhotonEnergy, GlassBackScatter,     nGlassEntries);
+    GlassSurfacePropertiesTable->AddProperty("RINDEX",       GlassPhotonEnergy, GlassRefractiveIndex, nGlassEntries);
+//    GlassSurfacePropertiesTable->DumpTable();
+    GlassSurface->SetMaterialPropertiesTable(GlassSurfacePropertiesTable);
+*/
     //**Photocathode surface properties
       G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
       assert(sizeof(photocath_EFF) == sizeof(pp));

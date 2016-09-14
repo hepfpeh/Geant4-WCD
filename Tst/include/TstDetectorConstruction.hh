@@ -31,6 +31,11 @@ public:
   G4int TyvekFoil_ySizeHalf;
   G4int TyvekFoil_zSizeHalf;
 
+  // GlassSlab
+  G4int GlassSlab_xSizeHalf;
+  G4int GlassSlab_ySizeHalf;
+  G4int GlassSlab_zSizeHalf;
+
   // PMT
 
   // Glass sphere

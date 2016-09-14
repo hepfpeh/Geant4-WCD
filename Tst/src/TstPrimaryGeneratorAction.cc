@@ -48,7 +48,7 @@ void TstPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   // on DetectorConstruction class we get Envelope volume
   // from G4LogicalVolumeStore.
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(1.0*m,1.0*m,0.0*m));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.0*m,1.0*m,0.0*m));
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }

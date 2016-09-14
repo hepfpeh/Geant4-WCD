@@ -44,7 +44,8 @@ G4bool TstSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
 void TstSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
 	G4int NumberOfPhotons = 0;
 	if ( TstSDHits ) NumberOfPhotons = TstSDHits->GetPhotonCount();
-	G4cout << "Photons detected on this event: " << NumberOfPhotons << G4endl;
+//	G4cout << "Photons detected in this event: " << NumberOfPhotons << G4endl;
+	G4cout << NumberOfPhotons << G4endl;
 	delete TstSDHits;
 	TstSDHits = 0;
 }
