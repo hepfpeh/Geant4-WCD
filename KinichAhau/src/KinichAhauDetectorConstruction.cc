@@ -200,7 +200,7 @@ G4bool checkOverlaps = true;
   G4VPhysicalVolume* Tyvek_phys =
     new G4PVPlacement(transform, Tyvek_log, "Tyvek_phys", expHall_log, false, 0, checkOverlaps);
 
-// The Water Tank
+  // The Water Tank
 
   G4double water1_rmina =  0.*cm, water1_rmaxa = 40.*cm;
   G4double water1_rminb =  0.*cm, water1_rmaxb = 40.*cm;
@@ -225,7 +225,7 @@ G4bool checkOverlaps = true;
   G4double height_pmt = 5.*cm;
   G4double startAngle_pmt = 0.*deg;
   G4double spanningAngle_pmt = 360.*deg;
-  G4double fOuterRadius_pmt = 35.*cm;
+  G4double fOuterRadius_pmt = 20.*cm;
 
 //  G4Tubs* fPmt = new G4Tubs("pmt_tube",innerRadius_pmt,fOuterRadius_pmt,
 //                    height_pmt,startAngle_pmt,spanningAngle_pmt);
@@ -242,7 +242,7 @@ G4bool checkOverlaps = true;
                                        fAl,
                                        "photocath_log");
 
-  G4VPhysicalVolume * fPhotocath_phys = new G4PVPlacement(0,G4ThreeVector(0,0,0.*cm),
+  G4VPhysicalVolume * fPhotocath_phys = new G4PVPlacement(0,G4ThreeVector(0,0,-55.*cm),
                                     fPhotocath_log,"photocath",
                                     Water_log,false,0, checkOverlaps);
 

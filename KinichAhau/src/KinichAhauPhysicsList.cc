@@ -55,7 +55,7 @@
 #include "G4LossTableManager.hh"
 #include "G4EmSaturation.hh"
 
-G4ThreadLocal G4int KinichAhauPhysicsList::fVerboseLevel = 1;
+G4ThreadLocal G4int KinichAhauPhysicsList::fVerboseLevel = 0;
 G4ThreadLocal G4int KinichAhauPhysicsList::fMaxNumPhotonStep = 20;
 G4ThreadLocal G4Cerenkov* KinichAhauPhysicsList::fCerenkovProcess = 0;
 G4ThreadLocal G4Scintillation* KinichAhauPhysicsList::fScintillationProcess = 0;
