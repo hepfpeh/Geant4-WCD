@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-
+#include "G4Timer.hh"
 #include "KinichAhauSensitiveDetector.hh"
 
 #include "G4VPhysicalVolume.hh"
@@ -39,8 +39,10 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 KinichAhauSensitiveDetector::KinichAhauSensitiveDetector(const G4String& name)
-  : G4VSensitiveDetector(name),  KinichAhauSDHits(0)
-{ }
+  : G4VSensitiveDetector(name),  KinichAhauSDHits(0), fTimer(0), fElapsedTime(0)
+{
+  fTimer = new G4Timer;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -55,7 +57,12 @@ void KinichAhauSensitiveDetector::Initialize(G4HCofThisEvent*)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
-	G4cout << "-o|o- Detection from KinichAhauSensitiveDetector::ProcessHits -o|o-" << G4endl;
+	fTimer -> Stop();
+//	fElapsedTime += fTimer -> GetRealElapsed();
+	G4cout  << "-o|o- Detection from KinichAhauSensitiveDetector::ProcessHits -o|o-"
+		<< " time= " << fTimer -> GetRealElapsed() << "s"
+		<< G4endl;
+	fTimer -> Start();
   return false;
 }
 

@@ -33,7 +33,10 @@
 
 #include "G4VSensitiveDetector.hh"
 #include "KinichAhauPMTHit.hh"
+#include "KinichAhauRunAction.hh"
 
+#include "globals.hh"
+#include "G4UserRunAction.hh"
 #include <vector>
 
 class G4Step;
@@ -56,6 +59,8 @@ class KinichAhauSensitiveDetector : public G4VSensitiveDetector
 
   private:
     KinichAhauPMTHit* KinichAhauSDHits;
+    G4Timer*          fTimer;
+    G4double*         fElapsedTime;
 };
 
 #endif

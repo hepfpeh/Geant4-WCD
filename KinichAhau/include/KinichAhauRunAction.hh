@@ -49,7 +49,8 @@ class KinichAhauRunAction : public G4UserRunAction
     virtual void EndOfRunAction(const G4Run* aRun);
 
   private:
-    G4Timer* fTimer;
+    G4Timer*  fTimer;
+    G4double* fElapsedTime;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
