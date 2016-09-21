@@ -41,6 +41,7 @@ target_link_libraries(Tst ${Geant4_LIBRARIES} )
 #
 set(Tst_SCRIPTS
     vis.mac
+    muon.mac
   )
 
 foreach(_script ${Tst_SCRIPTS})

@@ -1,4 +1,5 @@
 #include "TstSensitiveDetector.hh"
+#include "TstAnalysis.hh"
 //#include "LXePMTHit.hh"
 //#include "LXeDetectorConstruction.hh"
 //#include "LXeUserTrackInformation.hh"
@@ -42,10 +43,22 @@ G4bool TstSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void TstSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
+
+	// get analysis manager
+	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+
 	G4int NumberOfPhotons = 0;
 	if ( TstSDHits ) NumberOfPhotons = TstSDHits->GetPhotonCount();
 //	G4cout << "Photons detected in this event: " << NumberOfPhotons << G4endl;
 	G4cout << NumberOfPhotons << G4endl;
+
+	// fill histograms
+	analysisManager->FillH1(1, NumberOfPhotons);
+
+	// fill ntuple
+	analysisManager->FillNtupleDColumn(0, NumberOfPhotons);
+	analysisManager->AddNtupleRow();
+
 	delete TstSDHits;
 	TstSDHits = 0;
 }
