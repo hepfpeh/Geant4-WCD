@@ -6,7 +6,7 @@ Instituto de investigación
 Escuela de ciencias Físicas y Matemáticas
 USAC
 
-Este código en Geant4 (10.01) tiene como propósito poner a prueba aspectos fundamentales, como procesos físicos requerios, definición de superficies sensibles, captura de eventos y despliege de resultados de la simulación del tanque WCD (Hunapu) de prueba de la colaboración LAGO por parte la la USAC. Se basa principalmente en los ejemplos B1, OpticalNovice y LXe.
+Este código en Geant4 (10.2) tiene como propósito poner a prueba aspectos fundamentales, como procesos físicos requerios, definición de superficies sensibles, captura de eventos y despliege de resultados de la simulación del tanque WCD (Hunapu) de prueba de la colaboración LAGO por parte la la USAC. Se basa principalmente en los ejemplos B1, OpticalNovice y LXe.
 
 Esta simulación contiene
 
@@ -27,4 +27,6 @@ Esta geometría es de prueba y no coincide en absoluto con el detector real.
 
 - Se detectan los fotones que llegan a la esfera dentro del BoundaryProcess respectivo.
 
-- Ya se cuentan los fotones que llegan a la superficie sensible.
+- Ya se cuentan los fotones que llegan a la superficie sensible. Esta superficie esta recubierta con vidrio.
+
+- Se implementó un archivo de salida de datos Tst-<fecha-hora>.root donde se almacena los conteos de fotones. Este archivo debe ser abierto con root.
