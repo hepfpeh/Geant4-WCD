@@ -54,13 +54,13 @@ KinichAhauPrimaryGeneratorAction::KinichAhauPrimaryGeneratorAction()
   //default kinematic
   //
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4ParticleDefinition* particle = particleTable->FindParticle("e+");
+  G4ParticleDefinition* particle = particleTable->FindParticle("mu-");
 
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleTime(0.0*ns);
   fParticleGun->SetParticlePosition(G4ThreeVector(10.0*cm,10.0*cm,55.0*cm));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
-  fParticleGun->SetParticleEnergy(1.*MeV);
+  fParticleGun->SetParticleEnergy(4.*GeV);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

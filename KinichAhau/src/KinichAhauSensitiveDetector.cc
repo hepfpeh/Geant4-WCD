@@ -22,49 +22,68 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-//
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef KinichAhauDetectorConstruction_h
-#define KinichAhauDetectorConstruction_h 1
-
-#include "globals.hh"
-#include "G4VUserDetectorConstruction.hh"
+#include "G4Timer.hh"
 #include "KinichAhauSensitiveDetector.hh"
 
+#include "G4VPhysicalVolume.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Track.hh"
+#include "G4Step.hh"
+#include "G4VTouchable.hh"
+#include "G4TouchableHistory.hh"
+#include "G4ios.hh"
+#include "G4ParticleTypes.hh"
+#include "G4ParticleDefinition.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class KinichAhauDetectorConstruction : public G4VUserDetectorConstruction
+KinichAhauSensitiveDetector::KinichAhauSensitiveDetector(const G4String& name)
+  : G4VSensitiveDetector(name),  KinichAhauSDHits(0), fTimer(0), fElapsedTime(0)
 {
-  public:
-    KinichAhauDetectorConstruction();
-    virtual ~KinichAhauDetectorConstruction();
-
-  public:
-    virtual G4VPhysicalVolume* Construct();
-    virtual void ConstructSDandField();
-
-    //Logical Volume
-
-    G4LogicalVolume* fPhotocath_log;
-
-  private:
-    G4double fExpHall_x;
-    G4double fExpHall_y;
-    G4double fExpHall_z;
-
-    G4double fTank_x;
-    G4double fTank_y;
-    G4double fTank_z;
-
-    G4double fBubble_x;
-    G4double fBubble_y;
-    G4double fBubble_z;
-};
+  fTimer = new G4Timer;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif /*KinichAhauDetectorConstruction_h*/
+KinichAhauSensitiveDetector::~KinichAhauSensitiveDetector() {}
+
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::Initialize(G4HCofThisEvent*)
+{ }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
+	fTimer -> Stop();
+//	fElapsedTime += fTimer -> GetRealElapsed();
+	G4cout  << "-o|o- Detection from KinichAhauSensitiveDetector::ProcessHits -o|o-"
+		<< " time= " << fTimer -> GetRealElapsed() << "s"
+		<< G4endl;
+	fTimer -> Start();
+  return false;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
+	G4int NumberOfPhotons = 0;
+	if ( KinichAhauSDHits ) NumberOfPhotons = KinichAhauSDHits->GetPhotonCount();
+	G4cout << "Detections: " << NumberOfPhotons << G4endl;
+	delete KinichAhauSDHits;
+	KinichAhauSDHits = 0;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::clear() {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::DrawAll() {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::PrintAll() {}
