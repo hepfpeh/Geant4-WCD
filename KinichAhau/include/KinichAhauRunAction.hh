@@ -31,13 +31,27 @@
 #ifndef KinichAhauRunAction_h
 #define KinichAhauRunAction_h 1
 
+//sd
+#include "G4VSensitiveDetector.hh"
+#include "KinichAhauPMTHit.hh"
+//
+
 #include "globals.hh"
 #include "G4UserRunAction.hh"
+
+//sd
+#include <vector>
+//
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4Timer;
 class G4Run;
+
+// sd
+class G4Step;
+class G4HCofThisEvent;
+//
 
 class KinichAhauRunAction : public G4UserRunAction
 {
@@ -47,10 +61,30 @@ class KinichAhauRunAction : public G4UserRunAction
     virtual G4Run* GenerateRun();
     virtual void BeginOfRunAction(const G4Run* aRun);
     virtual void EndOfRunAction(const G4Run* aRun);
+  private:
+    G4Timer*  fTimer;
+    G4double* fElapsedTime;
+};
+
+class KinichAhauSensitiveDetector : public G4VSensitiveDetector
+{
+  public:
+    KinichAhauSensitiveDetector(const G4String& name);
+    virtual ~KinichAhauSensitiveDetector();
+  
+    // methods from base class
+    virtual void   Initialize(G4HCofThisEvent* hitCollection);
+    virtual G4bool ProcessHits(G4Step* step, G4TouchableHistory* history);
+
+    virtual void EndOfEvent(G4HCofThisEvent* );
+    virtual void clear();
+    void DrawAll();
+    void PrintAll();
 
   private:
     G4Timer*  fTimer;
     G4double* fElapsedTime;
+    KinichAhauPMTHit* KinichAhauSDHits;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

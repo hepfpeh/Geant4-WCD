@@ -29,6 +29,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "KinichAhauDetectorConstruction.hh"
+// #include "KinichAhauRunAction.hh"
 
 #include "globals.hh"
 #include "G4Material.hh"

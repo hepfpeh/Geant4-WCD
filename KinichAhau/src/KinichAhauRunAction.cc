@@ -41,10 +41,59 @@
 
 KinichAhauRunAction::KinichAhauRunAction()
  : G4UserRunAction(),
-   fTimer(0)
+   fTimer(0), fElapsedTime(0)
 {
   fTimer = new G4Timer;
 }
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+KinichAhauSensitiveDetector::KinichAhauSensitiveDetector(const G4String& name)
+  : G4VSensitiveDetector(name),  ftimer(0), fElapsedTime(0), KinichAhauSDHits(0)
+{ }
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+KinichAhauSensitiveDetector::~KinichAhauSensitiveDetector() {}
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::Initialize(G4HCofThisEvent*)
+{ }
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
+	fTimer -> Stop();
+//	fElapsedTime += fTimer -> GetRealElapsed();
+	G4cout  << "-o|o- Detection from KinichAhauRunAction::ProcessHits -o|o-"
+		<< " time= " << fTimer -> GetRealElapsed() << "s"
+		<< G4endl;
+	fTimer -> Start();
+  return false;
+}
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
+	G4int NumberOfPhotons = 0;
+	if ( KinichAhauSDHits ) NumberOfPhotons = KinichAhauSDHits->GetPhotonCount();
+	G4cout << "Detections: " << NumberOfPhotons << G4endl;
+	delete KinichAhauSDHits;
+	KinichAhauSDHits = 0;
+}
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::clear() {}
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::DrawAll() {}
+
+//sd....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void KinichAhauSensitiveDetector::PrintAll() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
