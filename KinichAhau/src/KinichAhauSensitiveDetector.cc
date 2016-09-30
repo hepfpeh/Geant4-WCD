@@ -63,7 +63,7 @@ G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
 	KinichAhauSDHits->IncPhotonCount();
 	fTimer -> Stop();
 //	fElapsedTime += fTimer -> GetRealElapsed();
-	G4cout  << fTimer -> GetUserElapsed() << G4endl;
+	G4cout  << fTimer -> GetSystemElapsed() << G4endl;
   return false;
 }
 

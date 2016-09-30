@@ -310,7 +310,7 @@ G4bool checkOverlaps = true;
   myST2->DumpTable();
 
   //**Photocathode surface properties
-  G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
+  G4double photocath_EFF[]={0.1,0.1}; //Enables 'detection' of photons
   assert(sizeof(photocath_EFF) == sizeof(ephoton));
   G4double photocath_ReR[]={1.92,1.92};
   assert(sizeof(photocath_ReR) == sizeof(ephoton));
