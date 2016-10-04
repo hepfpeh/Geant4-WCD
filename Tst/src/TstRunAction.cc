@@ -39,7 +39,10 @@ TstRunAction::TstRunAction()
 	// Creating ntuple
 	//
 	analysisManager->CreateNtuple("Tst", "Data");
-	analysisManager->CreateNtupleDColumn("Photon_count");
+	analysisManager->CreateNtupleDColumn("Primary_Energy");
+	analysisManager->CreateNtupleDColumn("Deposited_Energy");
+	analysisManager->CreateNtupleDColumn("Track_Length");
+	analysisManager->CreateNtupleDColumn("Photon_Count");
 	analysisManager->FinishNtuple();
 
 

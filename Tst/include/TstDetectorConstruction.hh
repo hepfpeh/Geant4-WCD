@@ -19,6 +19,8 @@ public:
   virtual G4VPhysicalVolume* Construct();
   virtual void ConstructSDandField();
 
+  G4LogicalVolume* GetScoringVolume() const { return ScoringVolume; }
+
   // Data members
 
   // Water cube (world)
@@ -44,9 +46,13 @@ public:
   // Metal Sphere
   G4int MetalSphere_outerRadius;
 
-  // Logical Volume
+  // Sensitive Volume
 
-  G4LogicalVolume* logic_MetalSphere;
+  G4LogicalVolume* SensitiveVolume;
+
+protected:
+  // Scoring volume
+  G4LogicalVolume*  ScoringVolume;
 
 };
 #endif
