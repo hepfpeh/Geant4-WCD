@@ -46,9 +46,12 @@ TstDetectorConstruction::TstDetectorConstruction()
 	  // Metal Sphere
 	  MetalSphere_outerRadius		= 19.5*cm;
 
-	  // Logical Volume
+	  // Sensitive Volume
 
-	  logic_MetalSphere = 0;
+	  SensitiveVolume = 0;
+
+	  // Scoring volume
+	  ScoringVolume = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -339,7 +342,7 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
   G4Orb* solid_MetalSphere =
 		  new G4Orb( "MetalSphere_solid", MetalSphere_outerRadius );
 
-  logic_MetalSphere =
+  G4LogicalVolume* logic_MetalSphere =
 		  new G4LogicalVolume( 	solid_MetalSphere,
 				  	  	  	  	aluminium,
 								"MetalSphere_logic");
@@ -382,34 +385,6 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
     TyvekSurfaceProperty->AddProperty("EFFICIENCY",pp,efficiency,num_0);
     TyvekSurface->SetMaterialPropertiesTable(TyvekSurfaceProperty);
 
-    // Glass
-
-/*    G4OpticalSurface* GlassSurface = new G4OpticalSurface("GlassSurface");
-    GlassSurface->SetType(dielectric_dielectric);
-    GlassSurface->SetFinish(polished);
-    GlassSurface->SetModel(unified);
-
-    new G4LogicalBorderSurface("GlassSurface1", physical_WaterCube, physical_GlassSphere, GlassSurface);
-
-    new G4LogicalBorderSurface("GlassSurface2", physical_WaterCube, physical_GlassSlab, GlassSurface);
-
-    G4double GlassReflectivity[] = {0.5, 0.5, 0.5, 0.5, 0.5};
-	G4double GlassEfficiency[]   = {0, 0, 0, 0, 0};
-	G4double GlassSpecularLobe[]    = {0.3, 0.3, 0.3, 0.3, 0.3};
-	G4double GlassSpecularSpike[]   = {0.2, 0.2, 0.2, 0.2, 0.2};
-	G4double GlassBackScatter[]     = {0.2, 0.2, 0.2, 0.2, 0.2};
-
-	G4MaterialPropertiesTable *GlassSurfacePropertiesTable = new G4MaterialPropertiesTable();
-
-	GlassSurfacePropertiesTable->AddProperty("REFLECTIVITY", GlassPhotonEnergy, GlassReflectivity, nGlassEntries);
-	GlassSurfacePropertiesTable->AddProperty("EFFICIENCY",   GlassPhotonEnergy, GlassEfficiency,   nGlassEntries);
-	GlassSurfacePropertiesTable->AddProperty("SPECULARLOBECONSTANT",  GlassPhotonEnergy, GlassSpecularLobe,    nGlassEntries);
-	GlassSurfacePropertiesTable->AddProperty("SPECULARSPIKECONSTANT", GlassPhotonEnergy, GlassSpecularSpike,   nGlassEntries);
-	GlassSurfacePropertiesTable->AddProperty("BACKSCATTERCONSTANT",   GlassPhotonEnergy, GlassBackScatter,     nGlassEntries);
-    GlassSurfacePropertiesTable->AddProperty("RINDEX",       GlassPhotonEnergy, GlassRefractiveIndex, nGlassEntries);
-//    GlassSurfacePropertiesTable->DumpTable();
-    GlassSurface->SetMaterialPropertiesTable(GlassSurfacePropertiesTable);
-*/
     //**Photocathode surface properties
       G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
       assert(sizeof(photocath_EFF) == sizeof(pp));
@@ -429,6 +404,15 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
       //**Create logical skin surfaces
         new G4LogicalSkinSurface("photocath_surf",logic_MetalSphere,photocath_opsurf);
 
+
+    // Set MetalSphere as sensitive volume
+
+    SensitiveVolume = logic_MetalSphere;
+
+	// Set WaterCube as scoring volume
+	//
+	ScoringVolume = logic_WaterCube;
+
   //
   //always return the physical World
   //
@@ -439,12 +423,12 @@ G4VPhysicalVolume* TstDetectorConstruction::Construct()
 
 void TstDetectorConstruction::ConstructSDandField() {
 
-  if (!logic_MetalSphere) return;
+  if (!SensitiveVolume) return;
 
   // PMT SD
 
   TstSensitiveDetector* TstSD = new TstSensitiveDetector("/Tst/TstSD");
 
-  SetSensitiveDetector(logic_MetalSphere, TstSD);
+  SetSensitiveDetector(SensitiveVolume, TstSD);
 
 }

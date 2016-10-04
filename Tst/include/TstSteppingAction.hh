@@ -19,6 +19,10 @@ class TstSteppingAction : public G4UserSteppingAction
 
     // method from the base class
     virtual void UserSteppingAction(const G4Step*);
+
+  private:
+    TstEventAction*  EventAction;
+    G4LogicalVolume* ScoringVolume;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

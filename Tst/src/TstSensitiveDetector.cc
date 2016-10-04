@@ -17,8 +17,10 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 TstSensitiveDetector::TstSensitiveDetector(G4String name)
-  : G4VSensitiveDetector(name),  TstSDHits(0)
-{ }
+  : G4VSensitiveDetector(name),  TstSDHitsCollection(0)
+{
+	  collectionName.insert("pmtHitCollection");
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -27,30 +29,42 @@ TstSensitiveDetector::~TstSensitiveDetector() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void TstSensitiveDetector::Initialize(G4HCofThisEvent*)
-{ }
+void TstSensitiveDetector::Initialize(G4HCofThisEvent* hitsCE)
+{
+	  TstSDHitsCollection = new TstHitsCollection
+	                      (SensitiveDetectorName,collectionName[0]);
+	  //Store collection with event and keep ID
+	  static G4int hitCID = -1;
+	  if(hitCID<0){
+	    hitCID = GetCollectionID(0);
+	  }
+	  hitsCE->AddHitsCollection( hitCID, TstSDHitsCollection );
+
+	  TstHit* hit = new TstHit;
+	  TstSDHitsCollection->insert(hit);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4bool TstSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
-	if( !TstSDHits ){
-		TstSDHits = new TstHit;
-	}
-	TstSDHits->IncPhotonCount();
+	TstHit* hit = new TstHit;
+	hit = (*TstSDHitsCollection)[0];
+	hit->IncPhotonCount();
   return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void TstSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
-
+/*
 	// get analysis manager
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
 	G4int NumberOfPhotons = 0;
 	if ( TstSDHits ) NumberOfPhotons = TstSDHits->GetPhotonCount();
-//	G4cout << "Photons detected in this event: " << NumberOfPhotons << G4endl;
-	G4cout << NumberOfPhotons << G4endl;
+	G4cout << "-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
+	G4cout << "Photons detected in this event: " << NumberOfPhotons << G4endl;
+//	G4cout << NumberOfPhotons << G4endl;
 
 	// fill histograms
 	analysisManager->FillH1(1, NumberOfPhotons);
@@ -61,6 +75,7 @@ void TstSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
 
 	delete TstSDHits;
 	TstSDHits = 0;
+*/
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

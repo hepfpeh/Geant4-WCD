@@ -28,7 +28,7 @@ class TstSensitiveDetector : public G4VSensitiveDetector
 
   private:
 
-    TstHit* TstSDHits;
+    TstHitsCollection* TstSDHitsCollection;
 
 };
 

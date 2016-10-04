@@ -44,10 +44,6 @@ void TstPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //this function is called at the begining of ecah event
   //
 
-  // In order to avoid dependence of PrimaryGeneratorAction
-  // on DetectorConstruction class we get Envelope volume
-  // from G4LogicalVolumeStore.
-
   fParticleGun->SetParticlePosition(G4ThreeVector(0.0*m,1.0*m,0.0*m));
 
   fParticleGun->GeneratePrimaryVertex(anEvent);

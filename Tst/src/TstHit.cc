@@ -13,6 +13,8 @@
 #include "G4LogicalVolume.hh"
 #include "G4VPhysicalVolume.hh"
 
+G4ThreadLocal G4Allocator<TstHit>* TstHitAllocator=0;
+
 TstHit::TstHit()
   : TstPhotonsPerEvent(0)
 { }
