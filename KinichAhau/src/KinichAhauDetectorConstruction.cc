@@ -257,26 +257,13 @@ G4bool checkOverlaps = true;
 
   new G4LogicalBorderSurface("waterSurface1", Water_phys,Tyvek_phys,opWaterSurface);
 
-//
-// Tyvek Cil
-//
-//  G4OpticalSurface* opTyvekCilSurface = new G4OpticalSurface("TyvekCilSurface");
-//  opWaterSurface->SetType(dielectric_dielectric);
-//  opWaterSurface->SetFinish(ground);
-
-//  new G4LogicalBorderSurface("TyvekCilSurface",
-//                                 TyvekCil1_phys,waterTank_phys,opTyvekCilSurface);
-
-//
-// Generate & Add Material Properties Table attached to the optical surfaces
-//
   const G4int num = 2;
   G4double ephoton[num] = {2.034*eV, 4.136*eV};
 
   // Water surface material properties table
 
-  G4double reflectivity[]       = {0.50, 0.50};
-  G4double efficiency[]         = {0.0, 0.0};
+  G4double reflectivity[num]       = {0.90, 0.90};
+  G4double efficiency[num]         = {0.0, 0.0};
   G4double refractiveIndex[num] = {1.35, 1.40};
   G4double specularLobe[num]    = {0.3, 0.3};
   G4double specularSpike[num]   = {0.2, 0.2};
@@ -310,7 +297,7 @@ G4bool checkOverlaps = true;
   myST2->DumpTable();
 
   //**Photocathode surface properties
-  G4double photocath_EFF[]={0.1,0.1}; //Enables 'detection' of photons
+  G4double photocath_EFF[]={0.9,0.9}; //Enables 'detection' of photons
   assert(sizeof(photocath_EFF) == sizeof(ephoton));
   G4double photocath_ReR[]={1.92,1.92};
   assert(sizeof(photocath_ReR) == sizeof(ephoton));
