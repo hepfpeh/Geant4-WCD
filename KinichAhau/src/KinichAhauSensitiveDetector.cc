@@ -46,7 +46,7 @@ KinichAhauSensitiveDetector::KinichAhauSensitiveDetector(const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-KinichAhauSensitiveDetector::~KinichAhauSensitiveDetector() {}
+KinichAhauSensitiveDetector::~KinichAhauSensitiveDetector() { }
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -57,12 +57,13 @@ void KinichAhauSensitiveDetector::Initialize(G4HCofThisEvent*)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
+	if( !KinichAhauSDHits ){
+		KinichAhauSDHits = new KinichAhauPMTHit;
+	}
+	KinichAhauSDHits->IncPhotonCount();
 	fTimer -> Stop();
 //	fElapsedTime += fTimer -> GetRealElapsed();
-	G4cout  << "-o|o- Detection from KinichAhauSensitiveDetector::ProcessHits -o|o-"
-		<< " time= " << fTimer -> GetRealElapsed() << "s"
-		<< G4endl;
-	fTimer -> Start();
+	G4cout  << fTimer -> GetUserElapsed() << G4endl;
   return false;
 }
 

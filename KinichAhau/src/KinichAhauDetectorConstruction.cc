@@ -225,7 +225,7 @@ G4bool checkOverlaps = true;
   G4double height_pmt = 5.*cm;
   G4double startAngle_pmt = 0.*deg;
   G4double spanningAngle_pmt = 360.*deg;
-  G4double fOuterRadius_pmt = 20.*cm;
+  G4double fOuterRadius_pmt = 10.*cm;
 
 //  G4Tubs* fPmt = new G4Tubs("pmt_tube",innerRadius_pmt,fOuterRadius_pmt,
 //                    height_pmt,startAngle_pmt,spanningAngle_pmt);
