@@ -23,28 +23,43 @@ public:
 
   // Data members
 
-  // Water cube (world)
-  G4int WaterCube_xSizeHalf;
-  G4int WaterCube_ySizeHalf;
-  G4int WaterCube_zSizeHalf;
+  // World cube
+  G4int WorldCube_xSizeHalf;
+  G4int WorldCube_ySizeHalf;
+  G4int WorldCube_zSizeHalf;
 
-  // Tyvek foil
-  G4int TyvekFoil_xSizeHalf;
-  G4int TyvekFoil_ySizeHalf;
-  G4int TyvekFoil_zSizeHalf;
+  // Tyvek tube
+  G4double TyvekTube_innerRadious;
+  G4double TyvekTube_outerRadious;
+  G4double TyvekTube_halfHeight;
+  G4double TyvekTube_startAngle;
+  G4double TyvekTube_spannAngle;
 
-  // GlassSlab
-  G4int GlassSlab_xSizeHalf;
-  G4int GlassSlab_ySizeHalf;
-  G4int GlassSlab_zSizeHalf;
+
+  // Water tube
+  G4double WaterTube_innerRadious;
+  G4double WaterTube_outerRadious;
+  G4double WaterTube_halfHeight;
+  G4double WaterTube_startAngle;
+  G4double WaterTube_spannAngle;
 
   // PMT
 
-  // Glass sphere
-  G4int GlassSphere_outerRadius;
+  // Glass SemiSphere
+  G4double GlassSemiSphere_outerRadius;
+  G4double GlassSemiSphere_innerRadius;
+  G4double GlassSemiSphere_startPhiAngle;
+  G4double GlassSemiSphere_endPhiAngle;
+  G4double GlassSemiSphere_startThetaAngle;
+  G4double GlassSemiSphere_deltaThetaAngle;
 
   // Metal Sphere
-  G4int MetalSphere_outerRadius;
+  G4double MetalSemiSphere_outerRadius;
+  G4double MetalSemiSphere_innerRadius;
+  G4double MetalSemiSphere_startPhiAngle;
+  G4double MetalSemiSphere_endPhiAngle;
+  G4double MetalSemiSphere_startThetaAngle;
+  G4double MetalSemiSphere_deltaThetaAngle;
 
   // Sensitive Volume
 

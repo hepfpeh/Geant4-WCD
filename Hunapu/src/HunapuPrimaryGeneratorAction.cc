@@ -27,6 +27,7 @@ HunapuPrimaryGeneratorAction::HunapuPrimaryGeneratorAction()
     = particleTable->FindParticle(particleName="opticalphoton");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(-1.0,-1.0,0.0));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.0*m,0.0*m,0.0*m));
   fParticleGun->SetParticleEnergy(3.0*eV);
 }
 
@@ -44,7 +45,6 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //this function is called at the begining of ecah event
   //
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(0.0*m,1.0*m,0.0*m));
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }

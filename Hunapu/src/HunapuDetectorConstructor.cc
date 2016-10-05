@@ -10,8 +10,9 @@
 #include "G4NistManager.hh"
 #include "G4Box.hh"
 //#include "G4Cons.hh"
-#include "G4Orb.hh"
-//#include "G4Sphere.hh"
+//#include "G4Orb.hh"
+#include "G4Sphere.hh"
+#include "G4Tubs.hh"
 //#include "G4Trd.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
@@ -24,27 +25,42 @@ HunapuDetectorConstruction::HunapuDetectorConstruction()
 : G4VUserDetectorConstruction()
 {
 
-	  // Water cube (world)
-	  WaterCube_xSizeHalf	= 1.00*m;
-	  WaterCube_ySizeHalf	= 1.00*m;
-	  WaterCube_zSizeHalf	= 1.00*m;
+	// World cube (world)
+	WorldCube_xSizeHalf	= 1.00*m;
+	WorldCube_ySizeHalf	= 1.00*m;
+	WorldCube_zSizeHalf	= 1.00*m;
 
-	  // Tyvek foil
-	  TyvekFoil_xSizeHalf	= 0.10*cm;
-	  TyvekFoil_ySizeHalf	= 40.0*cm;
-	  TyvekFoil_zSizeHalf	= 40.0*cm;
+	// Tyvek tube
+	TyvekTube_innerRadious	= 0.00 *cm;
+	TyvekTube_outerRadious	= 25.05 *cm;
+	TyvekTube_halfHeight	= 30.05*cm;
+	TyvekTube_startAngle	= 0.00 *deg;
+	TyvekTube_spannAngle	= 360  *deg;
 
-	  // GlassSlabe
-	  GlassSlab_xSizeHalf	= 25.00*cm;
-	  GlassSlab_ySizeHalf	= 10.00*cm;
-	  GlassSlab_zSizeHalf	= 25.00*cm;
-	  // PMT
+	// Water tube
+	WaterTube_innerRadious	= 0.00 *cm;
+	WaterTube_outerRadious	= 25.0 *cm;
+	WaterTube_halfHeight	= 30.0*cm;
+	WaterTube_startAngle	= 0.00 *deg;
+	WaterTube_spannAngle	= 360  *deg;
 
-	  // Glass sphere
-	  GlassSphere_outerRadius		= 20.0*cm;
+	// PMT
 
-	  // Metal Sphere
-	  MetalSphere_outerRadius		= 19.5*cm;
+	// Glass sphere
+	GlassSemiSphere_outerRadius		= 11.4	*cm;
+	GlassSemiSphere_innerRadius		= 0.00	*cm;
+	GlassSemiSphere_startPhiAngle	= 0.00	*deg;
+	GlassSemiSphere_endPhiAngle		= 360.	*deg;
+	GlassSemiSphere_startThetaAngle	= 90.0	*deg;
+	GlassSemiSphere_deltaThetaAngle	= 90.0	*deg;
+
+	// Metal Sphere
+	MetalSemiSphere_outerRadius		= 11.35	*cm;
+	MetalSemiSphere_innerRadius		= 0.00	*cm;
+	MetalSemiSphere_startPhiAngle	= GlassSemiSphere_startPhiAngle;
+	MetalSemiSphere_endPhiAngle		= GlassSemiSphere_endPhiAngle;
+	MetalSemiSphere_startThetaAngle	= GlassSemiSphere_startThetaAngle;
+	MetalSemiSphere_deltaThetaAngle	= GlassSemiSphere_deltaThetaAngle;
 
 	  // Sensitive Volume
 
@@ -68,8 +84,16 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
   G4double a, z, density;
   G4int nelements;
 
+  G4Element* N = new G4Element("Nitrogen", "N", z=7 , a=14.01*g/mole);
   G4Element* H = new G4Element("Hydrogen", "H", z=1 , a=1.01*g/mole);
   G4Element* O = new G4Element("Oxygen"  , "O", z=8 , a=16.00*g/mole);
+
+  // Air
+  //
+
+  G4Material* air = new G4Material("Air", density=1.29*mg/cm3, nelements=2);
+  air->AddElement(N, 70.*perCent);
+  air->AddElement(O, 30.*perCent);
 
   // Water material
   G4Material* water = new G4Material("Water", density= 1.0*g/cm3, nelements=2);
@@ -248,128 +272,143 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
   // World: WaterCube acts as world
   //
 
-  G4Box* solid_WaterCube=
-    new G4Box("WaterCube_solid",                       						//its name
-       WaterCube_xSizeHalf, WaterCube_ySizeHalf, WaterCube_zSizeHalf);     	//its size
+  G4Box* solid_WorldCube=
+    new G4Box("WorldCube_solid",                       						//its name
+    		WorldCube_xSizeHalf, WorldCube_ySizeHalf, WorldCube_zSizeHalf);     	//its size
 
-  G4LogicalVolume* logic_WaterCube =
-    new G4LogicalVolume(solid_WaterCube,          							//its solid
-                        water,           									//its material
-                        "WaterCube_logic");    								//its name
+  G4LogicalVolume* logic_WorldCube =
+    new G4LogicalVolume(solid_WorldCube,          							//its solid
+                        air,           									//its material
+                        "WorldCube_logic");    								//its name
 
-  G4VPhysicalVolume* physical_WaterCube =
+  G4VPhysicalVolume* physical_WorldCube =
     new G4PVPlacement(0,                 								    //no rotation
                       G4ThreeVector(),       								//at (0,0,0)
-                      logic_WaterCube,			          					//its logical volume
-                      "WaterCube_physical",               					//its name
+                      logic_WorldCube,			          					//its logical volume
+                      "WorldCube_physical",               					//its name
                       0,                     								//its mother  volume
                       false,                 								//no boolean operation
                       0,                     								//copy number
                       checkOverlaps);        								//overlaps checking
 
-
-  // GlassSlab
-
-  G4Box* solid_GlassSlab =
-    new G4Box("GlassSlab_solid",                       						//its name
-    		GlassSlab_xSizeHalf, GlassSlab_ySizeHalf, GlassSlab_zSizeHalf); //its size
-
-  G4LogicalVolume* logic_GlassSlab =
-    new G4LogicalVolume(solid_GlassSlab,          							//its solid
-                        glass,           									//its material
-                        "GlassSlab_logic");    								//its name
-
-//  G4VPhysicalVolume* physical_GlassSlab =
-    new G4PVPlacement(0,                 								    //no rotation
-                      G4ThreeVector(-25.0*cm,-75.0*cm, 00.0*cm),
-                      logic_GlassSlab,			          					//its logical volume
-                      "GlassSlab_physical",               					//its name
-					  logic_WaterCube,                     					//its mother  volume
-                      false,                 								//no boolean operation
-                      0,                     								//copy number
-                      checkOverlaps);        								//overlaps checking
-
-
-
-
+  // The Tyvek tube
   //
-  // Tyvek Foil
-  //
-  G4Box* solid_TyvekFoil =
-    new G4Box("TyvekFoil_solid",                    						//its name
-        TyvekFoil_xSizeHalf, TyvekFoil_ySizeHalf, TyvekFoil_zSizeHalf); 	//its size
+	G4Tubs* solid_TyvekTube
+		= new G4Tubs (	"TyvekTube_solid" , //its name
+			TyvekTube_innerRadious ,
+			TyvekTube_outerRadious ,
+			TyvekTube_halfHeight ,
+			TyvekTube_startAngle ,
+			TyvekTube_spannAngle ) ;
 
-  G4LogicalVolume* logic_TyvekFoil =
-    new G4LogicalVolume(solid_TyvekFoil,            						//its solid
-                        tyvek,             									//its material
-                        "TyvekFoil_logic");         						//its name
+	G4LogicalVolume* logic_TyvekTube
+	= new G4LogicalVolume ( solid_TyvekTube ,
+		tyvek ,
+		"TyvekTube_logic" ) ;
 
-  G4VPhysicalVolume* physical_TyvekFoil =
-	new G4PVPlacement(0,                       								//no rotation
-                    G4ThreeVector(-75.0*cm, 0, 0),
-                    logic_TyvekFoil,                						//its logical volume
-                    "TyvekFoil_physical",              						//its name
-                    logic_WaterCube,              							//its mother  volume
-                    false,                   								//no boolean operation
-                    0,                       								//copy number
-                    checkOverlaps);          								//overlaps checking
+	G4VPhysicalVolume* physical_TyvekTube
+	= new G4PVPlacement(0,
+		G4ThreeVector(),
+		logic_TyvekTube,
+		"TyvekTube_physical",
+		logic_WorldCube,
+		false,
+		0,
+		checkOverlaps);
+
+	// The Water tube
+	//
+	G4Tubs* solid_WaterTube
+		= new G4Tubs (	"WaterTube_solid" , //its name
+			WaterTube_innerRadious ,
+			WaterTube_outerRadious ,
+			WaterTube_halfHeight ,
+			WaterTube_startAngle ,
+			WaterTube_spannAngle ) ;
+
+	G4LogicalVolume* logic_WaterTube
+		= new G4LogicalVolume ( solid_WaterTube ,
+			water ,
+			"WaterTube_logic" ) ;
+
+	G4VPhysicalVolume* physical_WaterTube
+		= new G4PVPlacement(0,
+			G4ThreeVector(),
+			logic_WaterTube,
+			"WaterTube_physical",
+			logic_TyvekTube,
+			false,
+			0,
+			checkOverlaps);
+
+
 
 
   //
   // PMT
   //
-  // Glass sphere
-  G4Orb* solid_GlassSphere =
-		  new G4Orb( "GlassSphere_solid", GlassSphere_outerRadius );
+	// Glass sphere
+	G4Sphere* solid_GlassSemiSphere =
+		new G4Sphere( "GlassSemiSphere_solid",
+				GlassSemiSphere_innerRadius,
+				GlassSemiSphere_outerRadius,
+				GlassSemiSphere_startPhiAngle,
+				GlassSemiSphere_endPhiAngle,
+				GlassSemiSphere_startThetaAngle,
+				GlassSemiSphere_deltaThetaAngle);
 
-  G4LogicalVolume* logic_GlassSphere =
-		  new G4LogicalVolume( 	solid_GlassSphere,
-				  	  	  	  	glass,
-								"GlassSphere_logic");
+	G4LogicalVolume* logic_GlassSemiSphere =
+		new G4LogicalVolume( 	solid_GlassSemiSphere,
+			glass,
+			"GlassSemiSphere_logic");
 
-//  G4VPhysicalVolume* physical_GlassSphere =
-		  new G4PVPlacement(	0,
-				  	  	  	G4ThreeVector(50.0*cm,50.0*cm,50.0*cm),
-							logic_GlassSphere,
-							"GlassSphere_physical",
-							logic_WaterCube,
-							false,
-							0,
-							checkOverlaps);
+	//  G4VPhysicalVolume* physical_GlassSphere =
+		new G4PVPlacement(	0,
+			G4ThreeVector(0.0*cm,0.0*cm,30.0*cm),
+			logic_GlassSemiSphere,
+			"GlassSemiSphere_physical",
+			logic_WaterTube,
+			false,
+			0,
+			checkOverlaps);
 
 
-  // Metal sphere
-  G4Orb* solid_MetalSphere =
-		  new G4Orb( "MetalSphere_solid", MetalSphere_outerRadius );
+	// Metal sphere
+	G4Sphere* solid_MetalSemiSphere =
+		new G4Sphere( "MetalSemiSphere_solid",
+				MetalSemiSphere_innerRadius,
+				MetalSemiSphere_outerRadius,
+				MetalSemiSphere_startPhiAngle,
+				MetalSemiSphere_endPhiAngle,
+				MetalSemiSphere_startThetaAngle,
+				MetalSemiSphere_deltaThetaAngle);
 
-  G4LogicalVolume* logic_MetalSphere =
-		  new G4LogicalVolume( 	solid_MetalSphere,
-				  	  	  	  	aluminium,
-								"MetalSphere_logic");
+	G4LogicalVolume* logic_MetalSemiSphere =
+		new G4LogicalVolume( 	solid_MetalSemiSphere,
+			aluminium,
+			"MetalSemiSphere_logic");
 
-//  G4VPhysicalVolume* physical_MetalSphere =
-		  new G4PVPlacement(	0,
-//				  	  	  		G4ThreeVector(50.0*cm,50.0*cm,50.0*cm),
-				  	  	  		G4ThreeVector( 0, 0, 0),
-								logic_MetalSphere,
-								"MetalSphere_physical",
-//								logic_WaterCube,
-								logic_GlassSphere,
-								false,
-								0,
-								checkOverlaps);
+	//  G4VPhysicalVolume* physical_MetalSphere =
+		new G4PVPlacement(	0,
+			G4ThreeVector( 0, 0, 0),
+			logic_MetalSemiSphere,
+			"MetalSemiSphere_physical",
+			logic_GlassSemiSphere,
+			false,
+			0,
+			checkOverlaps);
 
   // Surfaces
   //
   // Tyvek
   //
-    G4OpticalSurface* TyvekSurface = new G4OpticalSurface("TyvekSurface");
-    TyvekSurface->SetType(dielectric_metal);
-    TyvekSurface->SetFinish(ground);
-    TyvekSurface->SetModel(unified);
+    G4OpticalSurface* WaterSurface = new G4OpticalSurface("WaterSurface");
+    WaterSurface->SetType(dielectric_metal);
+    WaterSurface->SetFinish(ground);
+    WaterSurface->SetModel(unified);
 
 
-    new G4LogicalBorderSurface("TyvekSurface", physical_WaterCube, physical_TyvekFoil, TyvekSurface);
+    new G4LogicalBorderSurface("WaterSurface", physical_WaterTube, physical_TyvekTube, WaterSurface);
 
     G4double pp[] = {2.0*eV, 3.5*eV};
     const G4int num_0 = sizeof(pp)/sizeof(G4double);
@@ -378,12 +417,12 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
     G4double efficiency[] = {0.0, 0.0};
     assert(sizeof(efficiency) == sizeof(pp));
 
-    G4MaterialPropertiesTable* TyvekSurfaceProperty
+    G4MaterialPropertiesTable* WaterSurfaceProperty
       	  = new G4MaterialPropertiesTable();
 
-    TyvekSurfaceProperty->AddProperty("REFLECTIVITY",pp,reflectivity,num_0);
-    TyvekSurfaceProperty->AddProperty("EFFICIENCY",pp,efficiency,num_0);
-    TyvekSurface->SetMaterialPropertiesTable(TyvekSurfaceProperty);
+    WaterSurfaceProperty->AddProperty("REFLECTIVITY",pp,reflectivity,num_0);
+    WaterSurfaceProperty->AddProperty("EFFICIENCY",pp,efficiency,num_0);
+    WaterSurface->SetMaterialPropertiesTable(WaterSurfaceProperty);
 
     //**Photocathode surface properties
       G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
@@ -402,21 +441,21 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
       photocath_opsurf->SetMaterialPropertiesTable(photocath_mt);
 
       //**Create logical skin surfaces
-        new G4LogicalSkinSurface("photocath_surf",logic_MetalSphere,photocath_opsurf);
+        new G4LogicalSkinSurface("photocath_surf",logic_MetalSemiSphere,photocath_opsurf);
 
 
-    // Set MetalSphere as sensitive volume
+    // Set MetalSemiSphere as sensitive volume
 
-    SensitiveVolume = logic_MetalSphere;
+    SensitiveVolume = logic_MetalSemiSphere;
 
 	// Set WaterCube as scoring volume
 	//
-	ScoringVolume = logic_WaterCube;
+	ScoringVolume = logic_WaterTube;
 
   //
   //always return the physical World
   //
-  return physical_WaterCube;
+  return physical_WorldCube;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
