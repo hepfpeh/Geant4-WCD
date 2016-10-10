@@ -1,0 +1,32 @@
+Tst README
+
+Héctor Pérez (hector@ecfm.usac.edu.gt)
+Laboratorio de instrumentación
+Instituto de investigación
+Escuela de ciencias Físicas y Matemáticas
+USAC
+
+Este código en Geant4 (10.2) tiene como propósito poner a prueba aspectos fundamentales, como procesos físicos requerios, definición de superficies sensibles, captura de eventos y despliege de resultados de la simulación del tanque WCD (Hunapu) de prueba de la colaboración LAGO por parte la la USAC. Se basa principalmente en los ejemplos B1, OpticalNovice y LXe.
+
+Esta simulación contiene
+
+- Inialización de la estructura básica de la simunalción (G4RunManager)
+
+- Construcción de un de prueba.
+-- El "mundo" es un cubo de Agua
+-- Una hoja de Tyvek en el centro del cubo
+-- Una esfera de aluminio fotosensible.
+-- Se especifican las superficies y las propiedades de estas
+Esta geometría es de prueba y no coincide en absoluto con el detector real.
+
+- PhysicsList que incluye la emisión de fotones Cherenkov
+
+- Procesos en la frontera
+
+- Inicialización (G4Gun) del evento primario que es un fotón optico (opticalphoton) de 3 eV que se lanza hacia la hoja de Tyvek.
+
+- Se detectan los fotones que llegan a la esfera dentro del BoundaryProcess respectivo.
+
+- Ya se cuentan los fotones que llegan a la superficie sensible. Esta superficie esta recubierta con vidrio.
+
+- Se implementó un archivo de salida de datos Tst-<fecha-hora>.root donde se almacena los conteos de fotones. Este archivo debe ser abierto con root.
