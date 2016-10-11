@@ -31,6 +31,7 @@
 #include "KinichAhauActionInitialization.hh"
 #include "KinichAhauPrimaryGeneratorAction.hh"
 #include "KinichAhauRunAction.hh"
+#include "TrackingAction.hh"
 #include "KinichAhauSteppingAction.hh"
 #include "KinichAhauStackingAction.hh"
 #include "KinichAhauSteppingVerbose.hh"
@@ -59,7 +60,11 @@ void KinichAhauActionInitialization::Build() const
 {
   SetUserAction(new KinichAhauPrimaryGeneratorAction());
   SetUserAction(new KinichAhauRunAction());
-  SetUserAction(new KinichAhauSteppingAction());
+
+  TrackingAction* trackingAction = new TrackingAction();
+  SetUserAction(trackingAction);
+
+  SetUserAction(new KinichAhauSteppingAction(trackingAction));
   SetUserAction(new KinichAhauStackingAction());
 }
 

@@ -34,13 +34,15 @@
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
 
+class TrackingAction;
+
 /// Stepping action class
 /// 
 
 class KinichAhauSteppingAction : public G4UserSteppingAction
 {
   public:
-    KinichAhauSteppingAction();
+    KinichAhauSteppingAction(TrackingAction*);
     virtual ~KinichAhauSteppingAction();
 
     // method from the base class
@@ -50,6 +52,7 @@ class KinichAhauSteppingAction : public G4UserSteppingAction
     G4int fCerenkovCounter;
     G4int fEventNumber;
     G4int fPhotons;
+    TrackingAction* fTrackingAction;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

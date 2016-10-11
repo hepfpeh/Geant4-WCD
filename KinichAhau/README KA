@@ -12,6 +12,6 @@ Para iniciar el ambiente en el build
 source /home/daniel/Documents/geant4.10.2-install/bin/geant4.sh
 
 Para crear en el build
-cmake DGeant4_DIR=/home/daniel/Documents/geant4.10.2-install/share/Geant4-10.2.1 /home/daniel/.ssh/LAGO-UVG/Geant4/opEjemplo/OpNovice
+cmake DGeant4_DIR=/home/daniel/Documents/geant4.10.2-install/share/Geant4-10.2.1 /home/daniel/.ssh/Geant4-WCD/KinichAhau
 
 para cambiar nombres de archivos: find /home/daniel/.ssh/LAGO-UVG/Geant4/KinichAhau/KinichAhau/ -name \*.cc -exec sed -i "s/OpNovice/KinichAhau/g" {} \;

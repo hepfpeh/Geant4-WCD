@@ -58,8 +58,8 @@ KinichAhauPrimaryGeneratorAction::KinichAhauPrimaryGeneratorAction()
 
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleTime(0.0*ns);
-  fParticleGun->SetParticlePosition(G4ThreeVector(10.0*cm,10.0*cm,55.0*cm));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.0*cm,0.0*cm,-55.0*cm));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0,1.));
   fParticleGun->SetParticleEnergy(4.*GeV);
 }
 

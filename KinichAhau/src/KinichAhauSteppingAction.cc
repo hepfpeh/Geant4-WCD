@@ -29,6 +29,7 @@
 /// \brief Implementation of the KinichAhauSteppingAction class
 
 #include "KinichAhauSteppingAction.hh"
+#include "TrackingAction.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -39,8 +40,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-KinichAhauSteppingAction::KinichAhauSteppingAction()
-: G4UserSteppingAction()
+KinichAhauSteppingAction::KinichAhauSteppingAction(TrackingAction* TrAct)
+: G4UserSteppingAction(),fTrackingAction(TrAct)
 { 
   fPhotons = 0;
   fEventNumber = -1;

@@ -25,6 +25,7 @@
 
 #include "G4Timer.hh"
 #include "KinichAhauSensitiveDetector.hh"
+#include "TrackingAction.hh"
 
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
@@ -56,14 +57,16 @@ void KinichAhauSensitiveDetector::Initialize(G4HCofThisEvent*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* ,G4TouchableHistory* ){
+G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
 	if( !KinichAhauSDHits ){
 		KinichAhauSDHits = new KinichAhauPMTHit;
 	}
 	KinichAhauSDHits->IncPhotonCount();
 	fTimer -> Stop();
-//	fElapsedTime += fTimer -> GetRealElapsed();
-	G4cout  << fTimer -> GetUserElapsed() << G4endl;
+//	G4cout  << fTimer -> GetRealElapsed() << G4endl;
+
+        G4double time   = aStep->GetTrack()->GetLocalTime();           
+	G4cout  << time << G4endl;
   return false;
 }
 
