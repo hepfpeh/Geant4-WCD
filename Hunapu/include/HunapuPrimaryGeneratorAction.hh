@@ -4,10 +4,13 @@
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 #include "globals.hh"
+#include "G4Tubs.hh"
+#include "G4Box.hh"
 
 class G4ParticleGun;
 class G4Event;
 class G4Box;
+class G4Tubs;
 
 /// The primary generator action class with particle gun.
 ///
@@ -28,6 +31,8 @@ class HunapuPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
   private:
     G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
+    G4Tubs* WaterTube;
+    G4Box* WorldBox;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -19,6 +19,8 @@
 #include "G4SystemOfUnits.hh"
 #include "G4VSensitiveDetector.hh"
 
+#include "G4PhysicalConstants.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HunapuDetectorConstruction::HunapuDetectorConstruction()
@@ -26,9 +28,7 @@ HunapuDetectorConstruction::HunapuDetectorConstruction()
 {
 
 	// World cube (world)
-	WorldCube_xSizeHalf	= 1.00*m;
-	WorldCube_ySizeHalf	= 1.00*m;
-	WorldCube_zSizeHalf	= 1.00*m;
+	WorldCube_SizeHalf	= 1.50*m;
 
 	// Tyvek tube
 	TyvekTube_innerRadious	= 0.00 *cm;
@@ -46,21 +46,21 @@ HunapuDetectorConstruction::HunapuDetectorConstruction()
 
 	// PMT
 
+	innerRadius		= 0.00	*cm;
+	startPhiAngle	= 0.00	*deg;
+	deltaPhiAngle	= 360.	*deg;
+	startThetaAngle	= 90.0	*deg;
+	deltaThetaAngle	= 90.0	*deg;
+
+
 	// Glass sphere
 	GlassSemiSphere_outerRadius		= 11.4	*cm;
-	GlassSemiSphere_innerRadius		= 0.00	*cm;
-	GlassSemiSphere_startPhiAngle	= 0.00	*deg;
-	GlassSemiSphere_endPhiAngle		= 360.	*deg;
-	GlassSemiSphere_startThetaAngle	= 90.0	*deg;
-	GlassSemiSphere_deltaThetaAngle	= 90.0	*deg;
 
 	// Metal Sphere
 	MetalSemiSphere_outerRadius		= 11.35	*cm;
-	MetalSemiSphere_innerRadius		= 0.00	*cm;
-	MetalSemiSphere_startPhiAngle	= GlassSemiSphere_startPhiAngle;
-	MetalSemiSphere_endPhiAngle		= GlassSemiSphere_endPhiAngle;
-	MetalSemiSphere_startThetaAngle	= GlassSemiSphere_startThetaAngle;
-	MetalSemiSphere_deltaThetaAngle	= GlassSemiSphere_deltaThetaAngle;
+
+	// Vacuum Sphere
+	VacuumSemiSphere_outerRadius	= 11.3	*cm;
 
 	  // Sensitive Volume
 
@@ -81,12 +81,17 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
 {
 
   // Some elements
-  G4double a, z, density;
+  G4double a, z, density, temperature, pressure;
   G4int nelements;
 
   G4Element* N = new G4Element("Nitrogen", "N", z=7 , a=14.01*g/mole);
   G4Element* H = new G4Element("Hydrogen", "H", z=1 , a=1.01*g/mole);
   G4Element* O = new G4Element("Oxygen"  , "O", z=8 , a=16.00*g/mole);
+
+
+  // Vacuum
+  //
+  G4Material* vacuum = new G4Material("vacuum", z=1., a=1.01*g/mole, density=universe_mean_density, kStateGas, temperature = 0.1*kelvin, pressure = 1.e-19*pascal);
 
   // Air
   //
@@ -274,7 +279,7 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
 
   G4Box* solid_WorldCube=
     new G4Box("WorldCube_solid",                       						//its name
-    		WorldCube_xSizeHalf, WorldCube_ySizeHalf, WorldCube_zSizeHalf);     	//its size
+    		WorldCube_SizeHalf, WorldCube_SizeHalf, WorldCube_SizeHalf);     	//its size
 
   G4LogicalVolume* logic_WorldCube =
     new G4LogicalVolume(solid_WorldCube,          							//its solid
@@ -350,12 +355,12 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
 	// Glass sphere
 	G4Sphere* solid_GlassSemiSphere =
 		new G4Sphere( "GlassSemiSphere_solid",
-				GlassSemiSphere_innerRadius,
+				innerRadius,
 				GlassSemiSphere_outerRadius,
-				GlassSemiSphere_startPhiAngle,
-				GlassSemiSphere_endPhiAngle,
-				GlassSemiSphere_startThetaAngle,
-				GlassSemiSphere_deltaThetaAngle);
+				startPhiAngle,
+				deltaPhiAngle,
+				startThetaAngle,
+				deltaThetaAngle);
 
 	G4LogicalVolume* logic_GlassSemiSphere =
 		new G4LogicalVolume( 	solid_GlassSemiSphere,
@@ -376,12 +381,12 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
 	// Metal sphere
 	G4Sphere* solid_MetalSemiSphere =
 		new G4Sphere( "MetalSemiSphere_solid",
-				MetalSemiSphere_innerRadius,
+				innerRadius,
 				MetalSemiSphere_outerRadius,
-				MetalSemiSphere_startPhiAngle,
-				MetalSemiSphere_endPhiAngle,
-				MetalSemiSphere_startThetaAngle,
-				MetalSemiSphere_deltaThetaAngle);
+				startPhiAngle,
+				deltaPhiAngle,
+				startThetaAngle,
+				deltaThetaAngle);
 
 	G4LogicalVolume* logic_MetalSemiSphere =
 		new G4LogicalVolume( 	solid_MetalSemiSphere,
@@ -394,6 +399,32 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
 			logic_MetalSemiSphere,
 			"MetalSemiSphere_physical",
 			logic_GlassSemiSphere,
+			false,
+			0,
+			checkOverlaps);
+
+
+	// Vacuum sphere
+	G4Sphere* solid_VacuumSemiSphere =
+		new G4Sphere( "VacuumSemiSphere_solid",
+				innerRadius,
+				VacuumSemiSphere_outerRadius,
+				startPhiAngle,
+				deltaPhiAngle,
+				startThetaAngle,
+				deltaThetaAngle);
+
+	G4LogicalVolume* logic_VacuumSemiSphere =
+		new G4LogicalVolume( 	solid_VacuumSemiSphere,
+			vacuum,
+			"VacuumSemiSphere_logic");
+
+	//  G4VPhysicalVolume* physical_VacuumSphere =
+		new G4PVPlacement(	0,
+			G4ThreeVector( 0, 0, 0),
+			logic_VacuumSemiSphere,
+			"VacuumSemiSphere_physical",
+			logic_MetalSemiSphere,
 			false,
 			0,
 			checkOverlaps);
