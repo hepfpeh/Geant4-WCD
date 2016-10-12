@@ -40,6 +40,7 @@ HunapuRunAction::HunapuRunAction()
 	//
 	analysisManager->CreateNtuple("Hunapu", "Data");
 	analysisManager->CreateNtupleDColumn("Primary_Energy");
+	analysisManager->CreateNtupleDColumn("Azimuth_angle");
 	analysisManager->CreateNtupleDColumn("Deposited_Energy");
 	analysisManager->CreateNtupleDColumn("Track_Length");
 	analysisManager->CreateNtupleDColumn("Photon_Count");

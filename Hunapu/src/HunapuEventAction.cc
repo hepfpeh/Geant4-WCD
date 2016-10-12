@@ -17,6 +17,7 @@ HunapuEventAction::HunapuEventAction()
   TrackLength(0.),
   PrimaryParticlePDGcode(0.),
   PrimaryParticleEnergy(0.),
+  PrimaryParticleAzimuthAngle(0.),
   HunapuSDHitsCollectionId(-1)
 {}
 
@@ -47,6 +48,7 @@ void HunapuEventAction::BeginOfEventAction(const G4Event*)
 		PrimaryParticleName = particleGun->GetParticleDefinition()->GetParticleName();
 		PrimaryParticlePDGcode = particleGun->GetParticleDefinition()->GetPDGEncoding();
 		PrimaryParticleEnergy = particleGun->GetParticleEnergy();
+		PrimaryParticleAzimuthAngle = generatorAction->GetParticleAzimuthAngle();
 	}
 }
 
@@ -57,9 +59,11 @@ void HunapuEventAction::EndOfEventAction(const G4Event* anEvent)
 
 	// Print the total amount of energy deposited in this event
 	G4cout << "-+-+-+-+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+-+-+-+-+-+-" << G4endl;
+	G4cout << "Event ID: " << anEvent->GetEventID() << G4endl;
 	G4cout << "Primary particle PDG code: " << PrimaryParticlePDGcode << G4endl;
 	G4cout << "Primary particle name: " << PrimaryParticleName << G4endl;
 	G4cout << "Primary particle energy: " << G4BestUnit(PrimaryParticleEnergy,"Energy") << G4endl;
+	G4cout << "Primary particle incident azimuth angle: " << G4BestUnit(PrimaryParticleAzimuthAngle,"Angle") << G4endl;
 	G4cout << "Energy deposited: " << G4BestUnit(DepositedEnergy,"Energy") << G4endl;
 	G4cout << "Track length: " << G4BestUnit(TrackLength,"Length") << G4endl;
 
@@ -81,9 +85,10 @@ void HunapuEventAction::EndOfEventAction(const G4Event* anEvent)
 
 	// fill ntuple
 	analysisManager->FillNtupleDColumn(0, PrimaryParticleEnergy);
-	analysisManager->FillNtupleDColumn(1, DepositedEnergy);
-	analysisManager->FillNtupleDColumn(2, TrackLength);
-	analysisManager->FillNtupleDColumn(3, NumberOfPhotons);
+	analysisManager->FillNtupleDColumn(1, PrimaryParticleAzimuthAngle);
+	analysisManager->FillNtupleDColumn(2, DepositedEnergy);
+	analysisManager->FillNtupleDColumn(3, TrackLength);
+	analysisManager->FillNtupleDColumn(4, NumberOfPhotons);
 	analysisManager->AddNtupleRow();
 
 	(*pmtHC)[0]->ResetPhotonCount();

@@ -1,5 +1,7 @@
 
 #include "HunapuPrimaryGeneratorAction.hh"
+#include "HunapuPrimaryGeneratorMessenger.hh"
+#include "HunapuRandom.hh"
 
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
@@ -11,10 +13,12 @@
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4String.hh"
 
 #include "Randomize.hh"
 
 #include <cmath>
+#include <map>
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -23,7 +27,10 @@ HunapuPrimaryGeneratorAction::HunapuPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(),
   fParticleGun(0),
   WaterTube(0),
-  WorldBox(0)
+  WorldBox(0),
+  ParticleDirection(All),
+  fGunMessenger(0),
+  ParticleAzimuthAngle(0)
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
@@ -37,6 +44,9 @@ HunapuPrimaryGeneratorAction::HunapuPrimaryGeneratorAction()
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(-1.0,-1.0,0.0));
   fParticleGun->SetParticlePosition(G4ThreeVector(0.0*m,0.0*m,0.0*m));
   fParticleGun->SetParticleEnergy(3.0*eV);
+
+  //create a messenger for this class
+  fGunMessenger = new HunapuPrimaryGeneratorMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -57,8 +67,6 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  // on DetectorConstruction class we get solid_WaterTube volume
 	  // from G4LogicalVolumeStore.
 
-	enum Direction { Vertical, NonVertical, All };
-	Direction ParticleDirection = All;
 
 	  G4double WaterTube_radius = 0;
 	  G4double WaterTube_halfHeight = 0;
@@ -116,8 +124,6 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	   * cil_z 		: coordenada cilindrica z en el rango -G4double WaterTube_halfHeight <= z <= +G4double WaterTube_halfHeight
 	   * cil_phi	: coordenada cilindrica phi en el rango 0 <= phi <= 2pi
 	   *
-	   * ang_theta	: angulo azimutal theta de la particula incidente en el rango 0 <= theta <= pi/2
-	   *
 	   * Las coordenadas cilindricas son de un punto dentro del volumen de agua en el que pasara la particula.
 	   *
 	   */
@@ -125,7 +131,16 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  G4double cil_r 		= ( G4UniformRand() * WaterTube_radius );
 	  G4double cil_z 		= ( ( G4UniformRand() - 0.5 ) * WaterTube_halfHeight );
 	  G4double cil_phi		= ( G4UniformRand() * twopi );
-	  G4double ang_theta	= ( G4UniformRand() * halfpi );
+
+	  /*
+	   *
+	   * ang_theta	: angulo azimutal theta de la particula incidente en el rango 0 <= theta <= pi/2
+	   *
+	   * El angulo azimutal se distribulle con cos^2.
+	   *
+	   */
+
+	  G4double ang_theta	= CosSqrDistRand();
 
 	  /*
 	   * Muones verticales
@@ -141,21 +156,23 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  G4double theta_c0 = std::atan( ( WaterTube_radius - cil_r ) / ( WaterTube_halfHeight - cil_z ) );
 	  G4double theta_c1 = std::atan( ( WaterTube_radius + cil_r ) / ( WaterTube_halfHeight + cil_z ) );
 
+	  G4double theta_crit = ( (theta_c0 < theta_c1 )? theta_c0 : theta_c1 );
 
 	  switch( ParticleDirection )
 	  {
 	  	  case Vertical	:
-	  		while ( ang_theta > ( (theta_c0 < theta_c1 )? theta_c0 : theta_c1 ) )
-	  					  ang_theta	= ( G4UniformRand() * halfpi );
+	  		while ( ang_theta > theta_crit )
+	  					  ang_theta	= CosSqrDistRand();
 	  		break;
 	  	  case NonVertical :
-		  		while ( ang_theta < ( (theta_c0 < theta_c1 )? theta_c0 : theta_c1 ) )
-		  					  ang_theta	= ( G4UniformRand() * halfpi );
+		  		while ( ang_theta < theta_crit )
+		  					  ang_theta	= CosSqrDistRand();
 		  		break;
 	  	  case All :
 	  		  break;
 	  }
 
+	  ParticleAzimuthAngle = ang_theta;
 
 	  /*
 	   * Coordenadas de la pistola de particulas
@@ -215,3 +232,13 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+void HunapuPrimaryGeneratorAction::SetParticleDirection(G4String aDirection)
+{
+	std::map< G4String, Direction > aMap;
+
+    aMap["Vertical"] 	= Vertical;
+    aMap["NonVertical"] = NonVertical;
+    aMap["All"] 		= All;
+
+    ParticleDirection = aMap[ aDirection ];
+}
