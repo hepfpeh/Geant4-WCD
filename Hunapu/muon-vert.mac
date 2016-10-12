@@ -4,6 +4,8 @@
 /process/setVerbose 0
 /process/em/verbose 0
 
+/Hunapu/gun/direction Vertical
+
 /gun/particle mu-
 /gun/energy 3 GeV
-/run/beamOn 10
+/run/beamOn 100

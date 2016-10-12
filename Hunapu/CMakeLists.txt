@@ -42,6 +42,8 @@ target_link_libraries(HunapuSim ${Geant4_LIBRARIES} )
 set(Hunapu_SCRIPTS
     vis.mac
     muon.mac
+    muon-vert.mac
+    muon-nonvert.mac
   )
 
 foreach(_script ${Hunapu_SCRIPTS})
