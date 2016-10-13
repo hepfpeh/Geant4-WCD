@@ -38,6 +38,9 @@ class HunapuPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     // method to get particle azimuth angle
     G4double GetParticleAzimuthAngle() const { return ParticleAzimuthAngle; }
 
+    // method to know if the particle direction is vertical
+    G4bool GetParticleVerticalDirectionFlag() const { return PrimaryParticleDirectionIsVertical; }
+
   private:
     G4ParticleGun*  					fParticleGun; // pointer a to G4 gun class
     G4Tubs* 							WaterTube;
@@ -45,6 +48,7 @@ class HunapuPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     Direction 							ParticleDirection;
     HunapuPrimaryGeneratorMessenger* 	fGunMessenger;
     G4double 							ParticleAzimuthAngle;
+    G4bool		 						PrimaryParticleDirectionIsVertical;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -30,7 +30,8 @@ HunapuPrimaryGeneratorAction::HunapuPrimaryGeneratorAction()
   WorldBox(0),
   ParticleDirection(All),
   fGunMessenger(0),
-  ParticleAzimuthAngle(0)
+  ParticleAzimuthAngle(0),
+  PrimaryParticleDirectionIsVertical(FALSE)
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
@@ -163,13 +164,19 @@ void HunapuPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  	  case Vertical	:
 	  		while ( ang_theta > theta_crit )
 	  					  ang_theta	= CosSqrDistRand();
+	  		PrimaryParticleDirectionIsVertical = TRUE;
 	  		break;
 	  	  case NonVertical :
-		  		while ( ang_theta < theta_crit )
-		  					  ang_theta	= CosSqrDistRand();
-		  		break;
+			while ( ang_theta < theta_crit )
+						  ang_theta	= CosSqrDistRand();
+			PrimaryParticleDirectionIsVertical = FALSE;
+			break;
 	  	  case All :
-	  		  break;
+			if ( ang_theta < theta_crit )
+				PrimaryParticleDirectionIsVertical = TRUE;
+			else
+				PrimaryParticleDirectionIsVertical = FALSE;
+			break;
 	  }
 
 	  ParticleAzimuthAngle = ang_theta;

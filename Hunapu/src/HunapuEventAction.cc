@@ -18,7 +18,9 @@ HunapuEventAction::HunapuEventAction()
   PrimaryParticlePDGcode(0.),
   PrimaryParticleEnergy(0.),
   PrimaryParticleAzimuthAngle(0.),
+  PrimaryParticleIsVertical(FALSE),
   HunapuSDHitsCollectionId(-1)
+
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -49,6 +51,7 @@ void HunapuEventAction::BeginOfEventAction(const G4Event*)
 		PrimaryParticlePDGcode = particleGun->GetParticleDefinition()->GetPDGEncoding();
 		PrimaryParticleEnergy = particleGun->GetParticleEnergy();
 		PrimaryParticleAzimuthAngle = generatorAction->GetParticleAzimuthAngle();
+		PrimaryParticleIsVertical = generatorAction->GetParticleVerticalDirectionFlag();
 	}
 }
 
@@ -64,6 +67,11 @@ void HunapuEventAction::EndOfEventAction(const G4Event* anEvent)
 	G4cout << "Primary particle name: " << PrimaryParticleName << G4endl;
 	G4cout << "Primary particle energy: " << G4BestUnit(PrimaryParticleEnergy,"Energy") << G4endl;
 	G4cout << "Primary particle incident azimuth angle: " << G4BestUnit(PrimaryParticleAzimuthAngle,"Angle") << G4endl;
+	G4cout << "Primary particle direction is vertical?: ";
+	if( PrimaryParticleIsVertical )
+		G4cout << "True" << G4endl;
+	else
+		G4cout << "False" << G4endl;
 	G4cout << "Energy deposited: " << G4BestUnit(DepositedEnergy,"Energy") << G4endl;
 	G4cout << "Track length: " << G4BestUnit(TrackLength,"Length") << G4endl;
 
@@ -86,9 +94,15 @@ void HunapuEventAction::EndOfEventAction(const G4Event* anEvent)
 	// fill ntuple
 	analysisManager->FillNtupleDColumn(0, PrimaryParticleEnergy);
 	analysisManager->FillNtupleDColumn(1, PrimaryParticleAzimuthAngle);
-	analysisManager->FillNtupleDColumn(2, DepositedEnergy);
-	analysisManager->FillNtupleDColumn(3, TrackLength);
-	analysisManager->FillNtupleDColumn(4, NumberOfPhotons);
+
+	if( PrimaryParticleIsVertical )
+		analysisManager->FillNtupleDColumn(2, 1.0);
+	else
+		analysisManager->FillNtupleDColumn(2, 0.0);
+
+	analysisManager->FillNtupleDColumn(3, DepositedEnergy);
+	analysisManager->FillNtupleDColumn(4, TrackLength);
+	analysisManager->FillNtupleDColumn(5, NumberOfPhotons);
 	analysisManager->AddNtupleRow();
 
 	(*pmtHC)[0]->ResetPhotonCount();
