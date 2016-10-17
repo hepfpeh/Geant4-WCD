@@ -24,9 +24,7 @@ public:
   // Data members
 
   // World cube
-  G4int WorldCube_xSizeHalf;
-  G4int WorldCube_ySizeHalf;
-  G4int WorldCube_zSizeHalf;
+  G4int WorldCube_SizeHalf;
 
   // Tyvek tube
   G4double TyvekTube_innerRadious;
@@ -45,21 +43,21 @@ public:
 
   // PMT
 
+  // This parameters are common to all PMTs volumes
+  G4double innerRadius;
+  G4double startPhiAngle;
+  G4double deltaPhiAngle;
+  G4double startThetaAngle;
+  G4double deltaThetaAngle;
+
   // Glass SemiSphere
   G4double GlassSemiSphere_outerRadius;
-  G4double GlassSemiSphere_innerRadius;
-  G4double GlassSemiSphere_startPhiAngle;
-  G4double GlassSemiSphere_endPhiAngle;
-  G4double GlassSemiSphere_startThetaAngle;
-  G4double GlassSemiSphere_deltaThetaAngle;
 
   // Metal Sphere
   G4double MetalSemiSphere_outerRadius;
-  G4double MetalSemiSphere_innerRadius;
-  G4double MetalSemiSphere_startPhiAngle;
-  G4double MetalSemiSphere_endPhiAngle;
-  G4double MetalSemiSphere_startThetaAngle;
-  G4double MetalSemiSphere_deltaThetaAngle;
+
+  // Vacuum Sphere
+  G4double VacuumSemiSphere_outerRadius;
 
   // Sensitive Volume
 

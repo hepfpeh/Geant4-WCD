@@ -27,6 +27,8 @@ class HunapuEventAction : public G4UserEventAction
     G4String	 PrimaryParticleName;
     G4int		 PrimaryParticlePDGcode;
     G4double	 PrimaryParticleEnergy;
+    G4double	 PrimaryParticleAzimuthAngle;
+    G4bool		 PrimaryParticleIsVertical;
 
     G4int		 HunapuSDHitsCollectionId;
 };

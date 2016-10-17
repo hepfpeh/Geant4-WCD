@@ -16,3 +16,8 @@ KinichAhau
 ==========
 
 Simulación hecha por Daniel Conde de la UVG.
+
+Hunapu
+======
+
+Simulación hecha por Héctor Pérez para el tanque de prueba de la USAC.
