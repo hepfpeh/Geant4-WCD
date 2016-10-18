@@ -184,9 +184,9 @@ G4bool checkOverlaps = true;
   G4Transform3D transform = G4Transform3D(rotm,pos1);
 
   // Tykev, cilindro
-  G4double tyvek1_rmina =  0.*cm, tyvek1_rmaxa = 40.2*cm;
-  G4double tyvek1_rminb =  0.*cm, tyvek1_rmaxb = 40.2*cm;
-  G4double tyvek1_hz = 57.2*cm;
+  G4double tyvek1_rmina =  0.*cm, tyvek1_rmaxa = 39.8*cm;
+  G4double tyvek1_rminb =  0.*cm, tyvek1_rmaxb = 39.8*cm;
+  G4double tyvek1_hz = 56.8*cm;
   G4double tyvek1_phimin = 0.*deg, tyvek1_phimax = 360.*deg;
 
   G4Cons* Tyvek_solid =
@@ -262,7 +262,7 @@ G4bool checkOverlaps = true;
 
   // Water surface material properties table
 
-  G4double reflectivity[num]       = {0.90, 0.90};
+  G4double reflectivity[num]       = {1.0, 1.0};
   G4double efficiency[num]         = {0.0, 0.0};
   G4double refractiveIndex[num] = {1.35, 1.40};
   G4double specularLobe[num]    = {0.3, 0.3};

@@ -36,6 +36,7 @@
 #include "G4ios.hh"
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4UnitsTable.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -66,7 +67,7 @@ G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory
 //	G4cout  << fTimer -> GetRealElapsed() << G4endl;
 
         G4double time   = aStep->GetTrack()->GetLocalTime();           
-	G4cout  << time << G4endl;
+	G4cout  << G4BestUnit(time,"Time") << G4endl;
   return false;
 }
 

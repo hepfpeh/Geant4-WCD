@@ -54,6 +54,13 @@ class KinichAhauPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
   private:
     G4ParticleGun* fParticleGun;
+    G4float theta;
+    G4float phi;
+    G4float px;
+    G4float py;
+    G4float pz;
+    G4float x;
+    G4float y;
     KinichAhauPrimaryGeneratorMessenger* fGunMessenger;
 };
 

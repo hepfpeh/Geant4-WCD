@@ -38,6 +38,9 @@
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4ThreeVector.hh"
+#include <cmath>
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -54,12 +57,40 @@ KinichAhauPrimaryGeneratorAction::KinichAhauPrimaryGeneratorAction()
   //default kinematic
   //
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4ParticleDefinition* particle = particleTable->FindParticle("mu+");
+  G4ParticleDefinition* particle = particleTable->FindParticle("mu-");
+
+  // Randomizando posición y dirección
+  G4int con = 1;
+
+  // ángulo polar
+  while(con>0)
+  {
+    theta = -3.1415/2+3.1415*G4UniformRand();
+    G4float alfa = (std::cos(theta))*(std::cos(theta));
+    G4float beta = G4UniformRand();
+    if (alfa > beta) {
+      con = -1;
+	};
+  }
+
+  //ángulo azimutal
+  phi = 2*3.1415*G4UniformRand();
+
+  px = std::cos(theta)*std::cos(phi);
+  py = std::cos(theta)*std::cos(phi);
+  pz = std::sin(theta);
+  G4ThreeVector gundir = G4ThreeVector(px,py,pz);
+
+  //posición
+  x = 40.*G4UniformRand()*std::cos(2*3.1415*G4UniformRand());
+  y = 40.*G4UniformRand()*std::cos(2*3.1415*G4UniformRand());
+
+  G4ThreeVector gunpos = G4ThreeVector(x*cm,y*cm,-55.0*cm);
 
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleTime(0.0*ns);
-  fParticleGun->SetParticlePosition(G4ThreeVector(0.0*cm,0.0*cm,-55.0*cm));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0,1.));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,-55.0*cm));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1));
   fParticleGun->SetParticleEnergy(4.*GeV);
 }
 
