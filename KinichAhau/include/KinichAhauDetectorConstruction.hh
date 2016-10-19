@@ -63,6 +63,12 @@ class KinichAhauDetectorConstruction : public G4VUserDetectorConstruction
     G4double fBubble_x;
     G4double fBubble_y;
     G4double fBubble_z;
+
+    G4double innerRadius;
+    G4double startPhiAngle;
+    G4double deltaPhiAngle;
+    G4double startThetaAngle;
+    G4double deltaThetaAngle;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

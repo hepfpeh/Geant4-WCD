@@ -44,6 +44,8 @@
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Tubs.hh"
+#include "G4Sphere.hh"
+#include "G4PhysicalConstants.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -68,7 +70,7 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   // Get nist material manager
   G4NistManager* nist = G4NistManager::Instance();
   G4Material* tyvek_mat = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
-  G4double a, z, density;
+  G4double a, z, density, temperature, pressure;
   G4int nelements;
 
 // Air
@@ -87,6 +89,12 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   G4Material* water = new G4Material("Water", density= 1.0*g/cm3, nelements=2);
   water->AddElement(H, 2);
   water->AddElement(O, 1);
+
+// Vacuum
+  G4Material* vacuum = new G4Material("vacuum", z=1., a=1.01*g/mole, density=universe_mean_density, kStateGas, temperature = 0.1*kelvin, pressure = 1.e-19*pascal);
+
+// Glass
+ G4Material* glass = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
 
 //
 // ------------ Generate & Add Material Properties Table ------------
@@ -134,8 +142,7 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   myMPT1->AddProperty("ABSLENGTH",    photonEnergy, absorption,     nEntries)
         ->SetSpline(true);
 
-  G4cout << "Water G4MaterialPropertiesTable" << G4endl;
-  myMPT1->DumpTable();
+//  myMPT1->DumpTable();
 
   water->SetMaterialPropertiesTable(myMPT1);
 
@@ -152,8 +159,7 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   G4MaterialPropertiesTable* myMPT2 = new G4MaterialPropertiesTable();
   myMPT2->AddProperty("RINDEX", photonEnergy, refractiveIndex2, nEntries);
 
-  G4cout << "Air G4MaterialPropertiesTable" << G4endl;
-  myMPT2->DumpTable();
+//  myMPT2->DumpTable();
 
   air->SetMaterialPropertiesTable(myMPT2);
 
@@ -184,9 +190,9 @@ G4bool checkOverlaps = true;
   G4Transform3D transform = G4Transform3D(rotm,pos1);
 
   // Tykev, cilindro
-  G4double tyvek1_rmina =  0.*cm, tyvek1_rmaxa = 39.8*cm;
-  G4double tyvek1_rminb =  0.*cm, tyvek1_rmaxb = 39.8*cm;
-  G4double tyvek1_hz = 56.8*cm;
+  G4double tyvek1_rmina =  0.*cm, tyvek1_rmaxa = 40.1*cm;
+  G4double tyvek1_rminb =  0.*cm, tyvek1_rmaxb = 40.1*cm;
+  G4double tyvek1_hz = 57.1*cm;
   G4double tyvek1_phimin = 0.*deg, tyvek1_phimax = 360.*deg;
 
   G4Cons* Tyvek_solid =
@@ -221,30 +227,88 @@ G4bool checkOverlaps = true;
 	new G4PVPlacement(transform, Water_log, "Water_phys", Tyvek_log, false, 0, checkOverlaps);
 
   // Build PMTs
-  G4double innerRadius_pmt = 0.*cm;
-  G4double height_pmt = 5.*cm;
-  G4double startAngle_pmt = 0.*deg;
-  G4double spanningAngle_pmt = 360.*deg;
-  G4double fOuterRadius_pmt = 10.*cm;
+  innerRadius	= 0.00	*cm;
+  startPhiAngle	= 0.00	*deg;
+  deltaPhiAngle	= 360.	*deg;
+  startThetaAngle	= 90.0	*deg;
+  deltaThetaAngle	= 90.0	*deg;
 
-//  G4Tubs* fPmt = new G4Tubs("pmt_tube",innerRadius_pmt,fOuterRadius_pmt,
-//                    height_pmt,startAngle_pmt,spanningAngle_pmt);
+// Glass sphere
+  G4Sphere* solid_GlassSemiSphere =
+    new G4Sphere( "GlassSemiSphere_solid",
+                  innerRadius,
+                  11.4*cm,
+                  startPhiAngle,
+                  deltaPhiAngle,
+                  startThetaAngle,
+                  deltaThetaAngle);
 
-  //the "photocathode" is a metal slab at the back of the glass that
-  //is only a very rough approximation of the real thing since it only
-  //absorbs or detects the photons based on the efficiency set below
-  G4Tubs* fPhotocath = new G4Tubs("photocath_tube",innerRadius_pmt,fOuterRadius_pmt,
-                          height_pmt/2,startAngle_pmt,spanningAngle_pmt);
+  G4LogicalVolume* logic_GlassSemiSphere =
+	new G4LogicalVolume( 	solid_GlassSemiSphere,
+		glass,
+		"GlassSemiSphere_logic");
 
-//  G4LogicalVolume* fPmt_log = new G4LogicalVolume(fPmt,G4Material::GetMaterial("Glass"),
-//                                 "pmt_log");
-  fPhotocath_log = new G4LogicalVolume(fPhotocath,
-                                       fAl,
-                                       "photocath_log");
+//  G4VPhysicalVolume* physical_GlassSphere =
+  new G4PVPlacement(	0,
+		G4ThreeVector(0,0,-55.*cm),
+		logic_GlassSemiSphere,
+		"GlassSemiSphere_physical",
+		Water_log,
+		false,
+		0,
+		checkOverlaps);
 
-  G4VPhysicalVolume * fPhotocath_phys = new G4PVPlacement(0,G4ThreeVector(0,0,-55.*cm),
-                                    fPhotocath_log,"photocath",
-                                    Water_log,false,0, checkOverlaps);
+
+// Metal sphere
+  G4Sphere* fPhotocath =
+	new G4Sphere( "pmt_tube",
+			innerRadius,
+			11.35*cm,
+			startPhiAngle,
+			deltaPhiAngle,
+			startThetaAngle,
+			deltaThetaAngle);
+
+fPhotocath_log =
+	new G4LogicalVolume( 	fPhotocath,
+		fAl,
+		"photocath_log");
+
+//  G4VPhysicalVolume* physical_MetalSphere =
+  new G4PVPlacement(	0,
+		G4ThreeVector(0,0,0),
+		fPhotocath_log,
+		"photocath",
+		logic_GlassSemiSphere,
+		false,
+		0,
+		checkOverlaps);
+
+
+// Vacuum sphere
+G4Sphere* solid_VacuumSemiSphere =
+	new G4Sphere( "VacuumSemiSphere_solid",
+			innerRadius,
+			11.3*cm,
+			startPhiAngle,
+			deltaPhiAngle,
+			startThetaAngle,
+			deltaThetaAngle);
+
+G4LogicalVolume* logic_VacuumSemiSphere =
+	new G4LogicalVolume( 	solid_VacuumSemiSphere,
+		vacuum,
+		"VacuumSemiSphere_logic");
+
+//  G4VPhysicalVolume* physical_VacuumSphere =
+	new G4PVPlacement(	0,
+		G4ThreeVector( 0, 0, 0),
+		logic_VacuumSemiSphere,
+		"VacuumSemiSphere_physical",
+		fPhotocath_log,
+		false,
+		0,
+		checkOverlaps);
 
 // ------------- Surfaces --------------
 //
@@ -262,7 +326,7 @@ G4bool checkOverlaps = true;
 
   // Water surface material properties table
 
-  G4double reflectivity[num]       = {1.0, 1.0};
+  G4double reflectivity[num]       = {0.95, 0.95};
   G4double efficiency[num]         = {0.0, 0.0};
   G4double refractiveIndex[num] = {1.35, 1.40};
   G4double specularLobe[num]    = {0.3, 0.3};
@@ -279,8 +343,8 @@ G4bool checkOverlaps = true;
   WaterSurfaceMPT->AddProperty("SPECULARSPIKECONSTANT", ephoton, specularSpike,   num);
   WaterSurfaceMPT->AddProperty("BACKSCATTERCONSTANT",   ephoton, backScatter,     num);
 
-  G4cout << "Water Surface G4MaterialPropertiesTable" << G4endl;
-  WaterSurfaceMPT->DumpTable();
+//  G4cout << "Water Surface G4MaterialPropertiesTable" << G4endl;
+//  WaterSurfaceMPT->DumpTable();
 
   opWaterSurface->SetMaterialPropertiesTable(WaterSurfaceMPT);
 
@@ -297,7 +361,7 @@ G4bool checkOverlaps = true;
   myST2->DumpTable();
 
   //**Photocathode surface properties
-  G4double photocath_EFF[]={0.9,0.9}; //Enables 'detection' of photons
+  G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
   assert(sizeof(photocath_EFF) == sizeof(ephoton));
   G4double photocath_ReR[]={1.92,1.92};
   assert(sizeof(photocath_ReR) == sizeof(ephoton));

@@ -64,7 +64,7 @@ KinichAhauRunAction::~KinichAhauRunAction()
 
 void KinichAhauRunAction::BeginOfRunAction(const G4Run* aRun)
 {
-  G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
+//  G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
   fTimer->Start();
 }
 
@@ -73,8 +73,8 @@ void KinichAhauRunAction::BeginOfRunAction(const G4Run* aRun)
 void KinichAhauRunAction::EndOfRunAction(const G4Run* aRun)
 {
   fTimer->Stop();
-  G4cout << "number of event = " << aRun->GetNumberOfEvent()
-         << " " << *fTimer << G4endl;
+//  G4cout << "number of event = " << aRun->GetNumberOfEvent()
+//         << " " << *fTimer << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

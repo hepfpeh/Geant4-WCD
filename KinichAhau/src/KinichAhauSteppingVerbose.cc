@@ -51,7 +51,7 @@ void KinichAhauSteppingVerbose::StepInfo()
   CopyState();
 
   G4int prec = G4cout.precision(3);
-
+  verboseLevel = 0;
   if( verboseLevel >= 1 ){
     if( verboseLevel >= 4 ) VerboseTrack();
     if( verboseLevel >= 3 ){

@@ -67,7 +67,7 @@ G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory
 //	G4cout  << fTimer -> GetRealElapsed() << G4endl;
 
         G4double time   = aStep->GetTrack()->GetLocalTime();           
-	G4cout  << G4BestUnit(time,"Time") << G4endl;
+//	G4cout  << G4BestUnit(time,"Time") << G4endl;
   return false;
 }
 
