@@ -70,7 +70,7 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   // Get nist material manager
   G4NistManager* nist = G4NistManager::Instance();
   G4Material* tyvek_mat = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
-  G4double a, z, density, temperature, pressure;
+  G4double a, z, density, temperature, pressure, fractionmass;
   G4int nelements;
 
 // Air
@@ -94,7 +94,24 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   G4Material* vacuum = new G4Material("vacuum", z=1., a=1.01*g/mole, density=universe_mean_density, kStateGas, temperature = 0.1*kelvin, pressure = 1.e-19*pascal);
 
 // Glass
- G4Material* glass = nist->FindOrBuildMaterial("G4_Pyrex_Glass");
+
+  G4Element* B = nist->FindOrBuildElement("B");
+  G4Element* Si = nist->FindOrBuildElement("Si");
+  G4Element* Na = nist->FindOrBuildElement("Na");
+  G4Element* Al = nist->FindOrBuildElement("Al");
+  G4Element* K = nist->FindOrBuildElement("K");
+
+  G4Material* pmtGlass = new G4Material("Borosilicate", density= 2.23*g/cm3, nelements=6);
+  pmtGlass->AddElement(B, fractionmass=0.040064);
+  pmtGlass->AddElement(O, fractionmass=0.539562); 
+  pmtGlass->AddElement(Na, fractionmass=0.028191);
+  pmtGlass->AddElement(Al, fractionmass=0.011644);
+  pmtGlass->AddElement(Si, fractionmass=0.377220);
+  pmtGlass->AddElement(K, fractionmass=0.003321);
+
+
+//Aluminum
+  G4Material* fAl = new G4Material("Al",z=13.,a=26.98*g/mole,density=2.7*g/cm3);
 
 //
 // ------------ Generate & Add Material Properties Table ------------
@@ -163,8 +180,20 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
 
   air->SetMaterialPropertiesTable(myMPT2);
 
-  //Aluminum
-  G4Material* fAl = new G4Material("Al",z=13.,a=26.98*g/mole,density=2.7*g/cm3);
+// PMT optical properties ------------------------------------
+
+  const G4int nEntries1 = 2;
+
+  G4double PhotonEnergy[nEntries1] =
+    {2.297*eV,2.297*eV};
+
+  G4double RefractiveIndexBorosilicate[nEntries1] =
+    {1.50,1.50};
+
+  G4MaterialPropertiesTable* borosilicateMPT = new G4MaterialPropertiesTable();
+  borosilicateMPT->AddProperty("RINDEX", PhotonEnergy, RefractiveIndexBorosilicate, nEntries1);
+
+  pmtGlass->SetMaterialPropertiesTable(borosilicateMPT); 
 
 //
 // ------------- Volumes --------------
@@ -244,13 +273,11 @@ G4bool checkOverlaps = true;
                   deltaThetaAngle);
 
   G4LogicalVolume* logic_GlassSemiSphere =
-	new G4LogicalVolume( 	solid_GlassSemiSphere,
-		glass,
-		"GlassSemiSphere_logic");
+	new G4LogicalVolume(solid_GlassSemiSphere, pmtGlass,"GlassSemiSphere_logic");
 
 //  G4VPhysicalVolume* physical_GlassSphere =
   new G4PVPlacement(	0,
-		G4ThreeVector(0,0,-55.*cm),
+		G4ThreeVector(0,0,57.*cm),
 		logic_GlassSemiSphere,
 		"GlassSemiSphere_physical",
 		Water_log,
@@ -263,14 +290,14 @@ G4bool checkOverlaps = true;
   G4Sphere* fPhotocath =
 	new G4Sphere( "pmt_tube",
 			innerRadius,
-			11.35*cm,
+			11.1*cm,
 			startPhiAngle,
 			deltaPhiAngle,
 			startThetaAngle,
 			deltaThetaAngle);
 
 fPhotocath_log =
-	new G4LogicalVolume( 	fPhotocath,
+	new G4LogicalVolume(fPhotocath,
 		fAl,
 		"photocath_log");
 
@@ -289,7 +316,7 @@ fPhotocath_log =
 G4Sphere* solid_VacuumSemiSphere =
 	new G4Sphere( "VacuumSemiSphere_solid",
 			innerRadius,
-			11.3*cm,
+			11.0*cm,
 			startPhiAngle,
 			deltaPhiAngle,
 			startThetaAngle,
@@ -326,7 +353,7 @@ G4LogicalVolume* logic_VacuumSemiSphere =
 
   // Water surface material properties table
 
-  G4double reflectivity[num]       = {0.95, 0.95};
+  G4double reflectivity[num]       = {0.85, 0.85};
   G4double efficiency[num]         = {0.0, 0.0};
   G4double refractiveIndex[num] = {1.35, 1.40};
   G4double specularLobe[num]    = {0.3, 0.3};

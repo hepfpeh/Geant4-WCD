@@ -82,7 +82,7 @@ G4cout << px << py << pz << G4endl;
   x = 40.*G4UniformRand()*std::cos(2*3.1415*G4UniformRand());
   y = 40.*G4UniformRand()*std::cos(2*3.1415*G4UniformRand());
 
-  G4ThreeVector gunpos = G4ThreeVector(x*cm,y*cm,56.9*cm);
+  G4ThreeVector gunpos = G4ThreeVector(x*cm,y*cm,40.*cm);
 
 G4cout << gunpos << G4endl;
 
