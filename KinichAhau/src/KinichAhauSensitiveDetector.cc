@@ -38,6 +38,8 @@
 #include "G4ParticleDefinition.hh"
 #include "G4UnitsTable.hh"
 
+#include <list>
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 KinichAhauSensitiveDetector::KinichAhauSensitiveDetector(const G4String& name)
@@ -61,13 +63,13 @@ void KinichAhauSensitiveDetector::Initialize(G4HCofThisEvent*)
 G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory* ){
 	if( !KinichAhauSDHits ){
 		KinichAhauSDHits = new KinichAhauPMTHit;
+//                photonTimesList =  new std::list<G4double>;
 	}
 	KinichAhauSDHits->IncPhotonCount();
-	fTimer -> Stop();
-//	G4cout  << fTimer -> GetRealElapsed() << G4endl;
 
-        G4double time   = aStep->GetTrack()->GetLocalTime();           
-//	G4cout  << G4BestUnit(time,"Time") << G4endl;
+	photonTime   = aStep->GetTrack()->GetLocalTime();           
+        photonTimesList.push_back (photonTime);
+//	G4cout  << G4BestUnit(photonTime,"Time") << G4endl;
   return false;
 }
 
@@ -76,7 +78,9 @@ G4bool KinichAhauSensitiveDetector::ProcessHits(G4Step* aStep,G4TouchableHistory
 void KinichAhauSensitiveDetector::EndOfEvent(G4HCofThisEvent* ) {
 	G4int NumberOfPhotons = 0;
 	if ( KinichAhauSDHits ) NumberOfPhotons = KinichAhauSDHits->GetPhotonCount();
-	G4cout << "Detections: " << NumberOfPhotons << G4endl;
+//	G4cout << "Detections: "
+        G4cout << NumberOfPhotons << G4endl;
+
 	delete KinichAhauSDHits;
 	KinichAhauSDHits = 0;
 }

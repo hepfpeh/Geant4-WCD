@@ -69,12 +69,13 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
 
   // Get nist material manager
   G4NistManager* nist = G4NistManager::Instance();
-  G4Material* tyvek_mat = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
   G4double a, z, density, temperature, pressure, fractionmass;
   G4int nelements;
 
+//Tyvek
+  G4Material* tyvek_mat = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
+
 // Air
-//
   G4Element* N = new G4Element("Nitrogen", "N", z=7 , a=14.01*g/mole);
   G4Element* O = new G4Element("Oxygen"  , "O", z=8 , a=16.00*g/mole);
 
@@ -83,7 +84,7 @@ G4VPhysicalVolume* KinichAhauDetectorConstruction::Construct()
   air->AddElement(O, 30.*perCent);
 
 // Water
-//
+
   G4Element* H = new G4Element("Hydrogen", "H", z=1 , a=1.01*g/mole);
 
   G4Material* water = new G4Material("Water", density= 1.0*g/cm3, nelements=2);
@@ -338,9 +339,13 @@ G4LogicalVolume* logic_VacuumSemiSphere =
 		checkOverlaps);
 
 // ------------- Surfaces --------------
-//
+
+
+  const G4int num = 2;
+  G4double ephoton[num] = {2.034*eV, 4.136*eV};
+
 // Water Tank
-//
+
   G4OpticalSurface* opWaterSurface = new G4OpticalSurface("WaterSurface");
   opWaterSurface->SetType(dielectric_metal);
   opWaterSurface->SetFinish(ground);
@@ -348,12 +353,9 @@ G4LogicalVolume* logic_VacuumSemiSphere =
 
   new G4LogicalBorderSurface("waterSurface1", Water_phys,Tyvek_phys,opWaterSurface);
 
-  const G4int num = 2;
-  G4double ephoton[num] = {2.034*eV, 4.136*eV};
-
   // Water surface material properties table
 
-  G4double reflectivity[num]       = {0.85, 0.85};
+  G4double reflectivity[num]       = {0.2534, 0.2534};
   G4double efficiency[num]         = {0.0, 0.0};
   G4double refractiveIndex[num] = {1.35, 1.40};
   G4double specularLobe[num]    = {0.3, 0.3};
@@ -370,12 +372,9 @@ G4LogicalVolume* logic_VacuumSemiSphere =
   WaterSurfaceMPT->AddProperty("SPECULARSPIKECONSTANT", ephoton, specularSpike,   num);
   WaterSurfaceMPT->AddProperty("BACKSCATTERCONSTANT",   ephoton, backScatter,     num);
 
-//  G4cout << "Water Surface G4MaterialPropertiesTable" << G4endl;
-//  WaterSurfaceMPT->DumpTable();
-
   opWaterSurface->SetMaterialPropertiesTable(WaterSurfaceMPT);
 
-  //OpticalAirSurface
+//OpticalAirSurface
   G4double reflectivity1[num] = {0.3, 0.5};
   G4double efficiency1[num]   = {0.0, 0.0};
 
@@ -387,17 +386,20 @@ G4LogicalVolume* logic_VacuumSemiSphere =
   G4cout << "Air Surface G4MaterialPropertiesTable" << G4endl;
   myST2->DumpTable();
 
-  //**Photocathode surface properties
+//**Photocathode surface properties
   G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
   assert(sizeof(photocath_EFF) == sizeof(ephoton));
   G4double photocath_ReR[]={1.92,1.92};
   assert(sizeof(photocath_ReR) == sizeof(ephoton));
   G4double photocath_ImR[]={1.69,1.69};
   assert(sizeof(photocath_ImR) == sizeof(ephoton));
+  
   G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
+  
   photocath_mt->AddProperty("EFFICIENCY",ephoton,photocath_EFF,num);
   photocath_mt->AddProperty("REALRINDEX",ephoton,photocath_ReR,num);
   photocath_mt->AddProperty("IMAGINARYRINDEX",ephoton,photocath_ImR,num);
+  
   G4OpticalSurface* photocath_opsurf=
     new G4OpticalSurface("photocath_opsurf",glisur,polished,
                          dielectric_metal);

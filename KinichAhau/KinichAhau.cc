@@ -146,7 +146,8 @@ int main(int argc,char** argv)
   // Get the pointer to the User Interface manager
   //
   G4UImanager* UImanager = G4UImanager::GetUIpointer(); 
-   
+  
+  macro = "optPhoton.mac";
   if ( macro.size() ) {
      // Batch mode
      G4String command = "/control/execute ";

@@ -1,4 +1,4 @@
-/control/verbose 2
+/control/verbose 0
 /tracking/verbose 0
 #
 /gun/particle e+

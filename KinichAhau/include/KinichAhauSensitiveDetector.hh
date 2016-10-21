@@ -38,6 +38,7 @@
 #include "globals.hh"
 #include "G4UserRunAction.hh"
 #include <vector>
+#include <list>
 
 class G4Step;
 class G4HCofThisEvent;
@@ -61,6 +62,8 @@ class KinichAhauSensitiveDetector : public G4VSensitiveDetector
     KinichAhauPMTHit* KinichAhauSDHits;
     G4Timer*          fTimer;
     G4double*         fElapsedTime;
+    G4double	      photonTime;
+    std::list<G4double> photonTimesList;
 };
 
 #endif

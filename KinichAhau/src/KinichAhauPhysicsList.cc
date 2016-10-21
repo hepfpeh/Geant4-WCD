@@ -69,7 +69,7 @@ G4ThreadLocal G4OpBoundaryProcess* KinichAhauPhysicsList::fBoundaryProcess = 0;
 KinichAhauPhysicsList::KinichAhauPhysicsList() 
  : G4VUserPhysicsList()
 {
-  fMessenger = new KinichAhauPhysicsListMessenger(this);
+//  fMessenger = new KinichAhauPhysicsListMessenger(this);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

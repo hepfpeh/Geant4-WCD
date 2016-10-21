@@ -29,7 +29,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "KinichAhauPrimaryGeneratorAction.hh"
-#include "KinichAhauPrimaryGeneratorMessenger.hh"
+//#include "KinichAhauPrimaryGeneratorMessenger.hh"
 
 #include "Randomize.hh"
 
@@ -52,7 +52,7 @@ KinichAhauPrimaryGeneratorAction::KinichAhauPrimaryGeneratorAction()
   fParticleGun = new G4ParticleGun(n_particle);
 
   //create a messenger for this class
-  fGunMessenger = new KinichAhauPrimaryGeneratorMessenger(this);
+//  fGunMessenger = new KinichAhauPrimaryGeneratorMessenger(this);
 
   // Randomizando posición y dirección
   G4int con = 1;
@@ -74,7 +74,7 @@ KinichAhauPrimaryGeneratorAction::KinichAhauPrimaryGeneratorAction()
   px = std::cos(theta)*std::cos(phi);
   py = std::cos(theta)*std::cos(phi);
   pz = std::sin(theta);
-  G4ThreeVector gundir = G4ThreeVector(px,py,pz);
+  G4ThreeVector gundir = G4ThreeVector(0.1,0.2,-1);
 
 G4cout << px << py << pz << G4endl;
 
@@ -103,7 +103,7 @@ G4cout << gunpos << G4endl;
 KinichAhauPrimaryGeneratorAction::~KinichAhauPrimaryGeneratorAction()
 {
   delete fParticleGun;
-  delete fGunMessenger;
+//  delete fGunMessenger;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
