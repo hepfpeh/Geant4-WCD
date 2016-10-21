@@ -12,12 +12,17 @@
 
 #include <ctime>
 #include <string>
+#include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 HunapuRunAction::HunapuRunAction()
 : G4UserRunAction()
 {
+
+	G4dVectorPointer = &G4dVector;
+
+	G4cout << "Pointer: " << G4dVectorPointer << G4endl;
 	// Create analysis manager
 	// The choice of analysis technology is done via selectin of a namespace
 	// in B4Analysis.hh
@@ -34,10 +39,11 @@ HunapuRunAction::HunapuRunAction()
 	//
 
 	// Creating histograms
-	analysisManager->CreateH1("1","Photon count at PMT", 40, 0., 400);
+	//analysisManager->CreateH1("1","Photon count at PMT", 40, 0., 400);
 
 	// Creating ntuple
 	//
+
 	analysisManager->CreateNtuple("Hunapu", "Data");
 	analysisManager->CreateNtupleDColumn("Primary_Energy");
 	analysisManager->CreateNtupleDColumn("Azimuth_angle");
@@ -45,6 +51,7 @@ HunapuRunAction::HunapuRunAction()
 	analysisManager->CreateNtupleDColumn("Deposited_Energy");
 	analysisManager->CreateNtupleDColumn("Track_Length");
 	analysisManager->CreateNtupleDColumn("Photon_Count");
+	analysisManager->CreateNtupleDColumn("Photon_Arrival_Time", G4dVector );
 	analysisManager->FinishNtuple();
 
 
@@ -93,12 +100,12 @@ void HunapuRunAction::EndOfRunAction(const G4Run*)
 	// print histogram statistics
 	//
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-	if ( analysisManager->GetH1(1) ) {
-		G4cout 	<< G4endl << " ----> print histograms statistic ";
-		G4cout 	<< "for the entire run " << G4endl << G4endl;
-		G4cout 	<< " Phothon count : mean = "
-				<< analysisManager->GetH1(1)->mean() << G4endl;
-	}
+//	if ( analysisManager->GetH1(1) ) {
+//		G4cout 	<< G4endl << " ----> print histograms statistic ";
+//		G4cout 	<< "for the entire run " << G4endl << G4endl;
+//		G4cout 	<< " Phothon count : mean = "
+//				<< analysisManager->GetH1(1)->mean() << G4endl;
+//	}
 
 	// save histograms & ntuple
 	//

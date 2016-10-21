@@ -8,6 +8,8 @@
 #ifndef HunapuHIT_HH_
 #define HunapuHIT_HH_
 
+#include <vector>
+
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
 #include "G4Allocator.hh"
@@ -26,12 +28,17 @@ class HunapuHit : public G4VHit
     inline void operator delete(void *aHit);
 
     inline void IncPhotonCount(){HunapuPhotonsPerEvent++;}
+    inline void AddPhotonTime( G4double Time ){PhotonArrivalTime->push_back( Time );}
+    inline void SetPhotonTime( std::vector<G4double>* aVector ){ PhotonArrivalTime = aVector;}
     inline G4int GetPhotonCount(){return HunapuPhotonsPerEvent;}
+    inline G4int GetPhotonTimeSize(){return PhotonArrivalTime->size();}
     inline void ResetPhotonCount(){HunapuPhotonsPerEvent=0;}
+    inline void ResetPhotonTime(){PhotonArrivalTime->clear();}
 
   private:
 
-    G4int HunapuPhotonsPerEvent;
+    G4int 					HunapuPhotonsPerEvent;
+    std::vector<G4double>	*PhotonArrivalTime;
 
 };
 

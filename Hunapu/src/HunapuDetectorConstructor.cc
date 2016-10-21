@@ -456,20 +456,28 @@ G4VPhysicalVolume* HunapuDetectorConstruction::Construct()
     WaterSurface->SetMaterialPropertiesTable(WaterSurfaceProperty);
 
     //**Photocathode surface properties
-      G4double photocath_EFF[]={1.,1.}; //Enables 'detection' of photons
-      assert(sizeof(photocath_EFF) == sizeof(pp));
-      G4double photocath_ReR[]={1.92,1.92};
-      assert(sizeof(photocath_ReR) == sizeof(pp));
-      G4double photocath_ImR[]={1.69,1.69};
-      assert(sizeof(photocath_ImR) == sizeof(pp));
-      G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
-      photocath_mt->AddProperty("EFFICIENCY",pp,photocath_EFF,num_0);
-      photocath_mt->AddProperty("REALRINDEX",pp,photocath_ReR,num_0);
-      photocath_mt->AddProperty("IMAGINARYRINDEX",pp,photocath_ImR,num_0);
-      G4OpticalSurface* photocath_opsurf=
-        new G4OpticalSurface("photocath_opsurf",glisur,polished,
-                             dielectric_metal);
-      photocath_opsurf->SetMaterialPropertiesTable(photocath_mt);
+//    G4double PhotonsEfficiencyEnergies[] = { 2.07*eV, 2.78*eV, 3.10*eV, 4.13*eV };
+//    const G4int num_1 = sizeof( PhotonsEfficiencyEnergies ) / sizeof( G4double );
+//    G4double photocath_EFF[]={ 1., 1., 1., 1. }; //Enables 'detection' of photons
+//    G4double photocath_EFF[]={ 0.00103, 0.1218, 0.2418, 0.00827 }; //Enables 'detection' of photons
+//	assert(sizeof(photocath_EFF) == sizeof( PhotonsEfficiencyEnergies ));
+    G4double photocath_EFF[]={ 1.0, 1.0 }; //Enables 'detection' of photons
+	assert(sizeof(photocath_EFF) == sizeof( pp ));
+	G4double photocath_ReR[]={1.92,1.92};
+	assert(sizeof(photocath_ReR) == sizeof(pp));
+	G4double photocath_ImR[]={1.69,1.69};
+	assert(sizeof(photocath_ImR) == sizeof(pp));
+	G4MaterialPropertiesTable* photocath_mt = new G4MaterialPropertiesTable();
+//	photocath_mt->AddProperty("EFFICIENCY",PhotonsEfficiencyEnergies,photocath_EFF,num_1);
+	photocath_mt->AddProperty("EFFICIENCY",pp,photocath_EFF,num_0);
+	photocath_mt->AddProperty("REALRINDEX",pp,photocath_ReR,num_0);
+	photocath_mt->AddProperty("IMAGINARYRINDEX",pp,photocath_ImR,num_0);
+	G4OpticalSurface* photocath_opsurf=
+		new G4OpticalSurface("photocath_opsurf",glisur,polished,
+							 dielectric_metal);
+	photocath_opsurf->SetMaterialPropertiesTable(photocath_mt);
+//	photocath_mt->DumpTable();
+//	photocath_opsurf->DumpInfo();
 
       //**Create logical skin surfaces
         new G4LogicalSkinSurface("photocath_surf",logic_MetalSemiSphere,photocath_opsurf);

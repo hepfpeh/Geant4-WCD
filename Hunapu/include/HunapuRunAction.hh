@@ -4,6 +4,8 @@
 #include "G4UserRunAction.hh"
 #include "globals.hh"
 
+#include <vector>
+
 class G4Run;
 
 /// Run action class
@@ -21,6 +23,11 @@ class HunapuRunAction : public G4UserRunAction
     virtual G4Run* GenerateRun();
     virtual void BeginOfRunAction(const G4Run*);
     virtual void   EndOfRunAction(const G4Run*);
+    inline std::vector<G4double>* GetVectorPointer() const { return G4dVectorPointer;}
+
+  private:
+    std::vector<G4double> G4dVector;
+    std::vector<G4double>* G4dVectorPointer;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
