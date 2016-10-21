@@ -1,5 +1,6 @@
 #include "HunapuEventAction.hh"
 #include "HunapuRun.hh"
+#include "HunapuRunAction.hh"
 #include "HunapuPrimaryGeneratorAction.hh"
 #include "HunapuAnalysis.hh"
 #include "HunapuHit.hh"
@@ -8,6 +9,7 @@
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4SDManager.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -83,13 +85,14 @@ void HunapuEventAction::EndOfEventAction(const G4Event* anEvent)
 	}
 
 	G4int NumberOfPhotons = (*pmtHC)[0]->GetPhotonCount();
+//	std::vector<G4double> PhotonArrivalTime = (*pmtHC)[0]->GetPhotonTime();
 	G4cout << "Photons detected in this event: " << NumberOfPhotons << G4endl;
 
 	// get analysis manager
 	G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
 
 	// fill histograms
-	analysisManager->FillH1(1, NumberOfPhotons);
+	//analysisManager->FillH1(1, NumberOfPhotons);
 
 	// fill ntuple
 	analysisManager->FillNtupleDColumn(0, PrimaryParticleEnergy);
@@ -103,9 +106,15 @@ void HunapuEventAction::EndOfEventAction(const G4Event* anEvent)
 	analysisManager->FillNtupleDColumn(3, DepositedEnergy);
 	analysisManager->FillNtupleDColumn(4, TrackLength);
 	analysisManager->FillNtupleDColumn(5, NumberOfPhotons);
+
+	const HunapuRunAction* runAction = static_cast<const HunapuRunAction*>(G4RunManager::GetRunManager()->GetUserRunAction());
+
+	G4cout << "Photon time size: " << (*pmtHC)[0]->GetPhotonTimeSize() << " pointer: " << runAction->GetVectorPointer() << G4endl;
+
 	analysisManager->AddNtupleRow();
 
 	(*pmtHC)[0]->ResetPhotonCount();
+	(*pmtHC)[0]->ResetPhotonTime();
 
 }
 

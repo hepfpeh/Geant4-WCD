@@ -3,6 +3,7 @@
 #include "HunapuRunAction.hh"
 #include "HunapuEventAction.hh"
 #include "HunapuSteppingAction.hh"
+#include "HunapuStackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -33,6 +34,7 @@ void HunapuActionInitialization::Build() const
   SetUserAction(eventAction);
 
   SetUserAction(new HunapuSteppingAction(eventAction));
+//  SetUserAction(new HunapuStackingAction());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

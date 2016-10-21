@@ -16,7 +16,8 @@
 G4ThreadLocal G4Allocator<HunapuHit>* HunapuHitAllocator=0;
 
 HunapuHit::HunapuHit()
-  : HunapuPhotonsPerEvent(0)
+  : HunapuPhotonsPerEvent(0),
+	PhotonArrivalTime(0)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -27,13 +28,15 @@ HunapuHit::~HunapuHit() {}
 
 HunapuHit::HunapuHit(const HunapuHit &right) : G4VHit()
 {
-	HunapuPhotonsPerEvent=right.HunapuPhotonsPerEvent;
+	HunapuPhotonsPerEvent	= right.HunapuPhotonsPerEvent;
+	PhotonArrivalTime		= right.PhotonArrivalTime;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 const HunapuHit& HunapuHit::operator=(const HunapuHit &right){
-	HunapuPhotonsPerEvent=right.HunapuPhotonsPerEvent;
+	HunapuPhotonsPerEvent	= right.HunapuPhotonsPerEvent;
+	PhotonArrivalTime		= right.PhotonArrivalTime;
   return *this;
 }
 
