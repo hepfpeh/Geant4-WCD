@@ -5,3 +5,6 @@
 # Excluir los archivos que inicien o finalicen con ~ 
 ~*
 *~
+# Archivos generados por mac os
+.DS_Store
+
