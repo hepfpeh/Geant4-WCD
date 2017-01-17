@@ -44,6 +44,7 @@ set(Hunapu_SCRIPTS
     muon.mac
     muon-vert.mac
     muon-nonvert.mac
+    pulses.C
   )
 
 foreach(_script ${Hunapu_SCRIPTS})
