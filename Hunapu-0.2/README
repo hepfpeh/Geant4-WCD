@@ -1,29 +1,28 @@
-Hunapu README
-=============
+Hunapu-0.2 README
+=================
 
-Simulación en Geant4 (10.2) del tanque de prueba de la USAC dentro de la colaboración LAGO.
+Proyecto de simulación del sistema de detección de particulas generadas por rayos cósmicos en la atmósfera, dentro del marco de la colaboración LAGO (http://lagoproject.org/).
 
-Este proyecto está basado en los ejemplos B1, B4, OpNovice, LXe y el trabajo de Amilcar roca.
+La simulación consta de dos partes:
+- Simulación en Geant4 (10.3) del tanque de prueba de la USAC dentro de la colaboración LAGO. Este proyecto está basado en los ejemplos B1, B4, B5, OpNovice, LXe y el trabajo de Amilcar roca. Esta simulación contiene:
 
-Esta simulación contiene:
+-- Geometría del tanque WCD
+--- El "mundo" es un cubo de aire.
+--- Se utiliza un tubo de tyvek solido que es llenado con un tubo de agua de dimensiones tales que el resultado es una capa de tyvek rodeando el agua.
+--- PMT construido de vidrio (pyrex), aluminio y vacio.
 
-- Geometría del tanque WCD
--- El "mundo" es un cubo de aire.
--- Se utiliza un tubo de tyvek solido que es llenado con un tubo de agua de dimensiones tales que el resultado es una capa de tyvek rodeando el agua.
--- PMT construido de vidrio (pyrex), aluminio y vacio.
+-- Procesos físicos
+--- Transporte
+--- Decaimiento
+--- Electromagnéticos
+--- fotones ópticos (emisión Cherenkov)
 
-- Procesos físicos
--- Transporte
--- Decaimiento
--- Electromagnéticos
--- fotones ópticos (emisión Cherenkov)
+-- Generación y detección
+--- Generación de partículas con trayectorias aleatorias (todas pasan por el tanque)
+--- Conteo de fotones opticos que alcanzan el PMT.
 
-- Generación y detección
--- Generación de partículas con trayectorias aleatorias (todas pasan por el tanque)
--- Conteo de fotones opticos que alcanzan el PMT.
-
-- Salida de datos
--- Los datos generados por la simulación se escriben a un archivo .root. Estos son:
+-- Salida de datos
+--- Los datos generados por la simulación se escriben a un archivo .root. Estos son:
 	Energía de la partícula primaria.
 	Angulo de incidencia respecto al eje z del tanque.
 	Indica si la trayectoria es "vertical".
@@ -31,11 +30,19 @@ Esta simulación contiene:
 	Distancia viajada por la partícula primaria dentro del agua.
 	Conteo de fotones que alcanzan el PMT.
 
-- Pendientes de implementar
--- Eficiencia cuántica del PMT.
--- Material plástico del tanque.
--- Distribución de energía de la partícula incidente.
+-- Pendientes de implementar
+--- Material plástico del tanque.
+--- Distribución de energía de la partícula incidente.
 
+- Simulación de la electrónica de adquisición. Esta utiliza librerias ROOT.
+
+-- Construcción numérica del pulso de carga de salida del PMT a partir de los datos de incidencia de fotones generados por WCDtankSim.
+-- Construcción numérica del pulso de voltaje generado en una electrónica equivalente.
+-- Digitalización del pulso.
+
+-- Pendiente de implementar
+--- Ruido en la señal.
+--- Capacidad de especificar parámetros como: ganancia del PMT, resistesia y capacitancia del circuito equivalente, voltaje de referencia, bits del ADC y nivel de threshold a partil de línea de comandos o un archivo de configuración.
 
 
 Héctor Pérez (hector@ecfm.usac.edu.gt)
