@@ -4,7 +4,7 @@ Hunapu-0.2 README
 Proyecto de simulación del sistema de detección de particulas generadas por rayos cósmicos en la atmósfera, dentro del marco de la colaboración LAGO (http://lagoproject.org/).
 
 La simulación consta de dos partes:
-- Simulación en Geant4 (10.3) del tanque de prueba de la USAC dentro de la colaboración LAGO. Este proyecto está basado en los ejemplos B1, B4, B5, OpNovice, LXe y el trabajo de Amilcar roca. Esta simulación contiene:
+- WCDtanlSim: Simulación en Geant4 (10.3) del tanque de prueba de la USAC. Este proyecto está basado en los ejemplos B1, B4, B5, OpNovice, LXe y el trabajo de Amilcar roca. Esta simulación contiene:
 
 -- Geometría del tanque WCD
 --- El "mundo" es un cubo de aire.
@@ -34,15 +34,16 @@ La simulación consta de dos partes:
 --- Material plástico del tanque.
 --- Distribución de energía de la partícula incidente.
 
-- Simulación de la electrónica de adquisición. Esta utiliza librerias ROOT.
+- ElecSim: Simulación de la electrónica de adquisición. Esta utiliza librerías ROOT.
 
--- Construcción numérica del pulso de carga de salida del PMT a partir de los datos de incidencia de fotones generados por WCDtankSim.
+-- Construcción numérica del pulso de carga de salida del PMT a partir de los datos de incidencia de fotones en el PMT generados por WCDtankSim.
 -- Construcción numérica del pulso de voltaje generado en una electrónica equivalente.
 -- Digitalización del pulso.
+-- Construcción del histograma de máximos de los pulsos digitalizados.
 
 -- Pendiente de implementar
 --- Ruido en la señal.
---- Capacidad de especificar parámetros como: ganancia del PMT, resistesia y capacitancia del circuito equivalente, voltaje de referencia, bits del ADC y nivel de threshold a partil de línea de comandos o un archivo de configuración.
+--- Capacidad de especificar parámetros como: ganancia del PMT, resistesia y capacitancia del circuito equivalente, voltaje de referencia, bits del ADC y nivel de threshold a partir de línea de comandos o un archivo de configuración.
 
 
 Héctor Pérez (hector@ecfm.usac.edu.gt)
