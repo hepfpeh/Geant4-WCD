@@ -4,7 +4,7 @@ Hunapu-0.2 README
 Proyecto de simulación del sistema de detección de particulas generadas por rayos cósmicos en la atmósfera, dentro del marco de la colaboración LAGO (http://lagoproject.org/).
 
 La simulación consta de dos partes:
-- WCDtanlSim: Simulación en Geant4 (10.3) del tanque de prueba de la USAC. Este proyecto está basado en los ejemplos B1, B4, B5, OpNovice, LXe y el trabajo de Amilcar roca. Esta simulación contiene:
+- WCDtankSim: Simulación en Geant4 (10.3) del tanque de prueba de la USAC. Este proyecto está basado en los ejemplos B1, B4, B5, OpNovice, LXe y el trabajo de Amilcar roca. Esta simulación contiene:
 
 -- Geometría del tanque WCD
 --- El "mundo" es un cubo de aire.
