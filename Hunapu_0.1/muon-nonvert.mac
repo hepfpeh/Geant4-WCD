@@ -1,0 +1,11 @@
+/control/verbose 0
+/tracking/verbose 0
+/event/verbose 0
+/process/setVerbose 0
+/process/em/verbose 0
+
+/Hunapu/gun/direction NonVertical
+
+/gun/particle mu-
+/gun/energy 3 GeV
+/run/beamOn 100
