@@ -20,4 +20,4 @@ Simulación hecha por Daniel Conde de la UVG.
 Hunapu-x.x
 ==========
 
-Simulación hecha por Héctor Pérez para el tanque de prueba de la USAC.
+Simulación hecha por Héctor Pérez para el tanque de prueba de la USAC. El trabajo en esta simulación ha migrado al siguiente repositorio: https://github.com/hepfpeh/WCDG4Sim
